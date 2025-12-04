@@ -2,26 +2,27 @@
 @import "tw-animate-css";
 
 @theme inline {
-  --color-background: hsl(222 15% 10%);
+  --color-background: hsl(0 0% 5%);
   --color-foreground: hsl(0 0% 100%);
 
-  --color-primary: hsl(75 90% 55%);
-  --color-primary-foreground: hsl(222 15% 10%);
+  /* Red Brand Color */
+  --color-primary: hsl(354 85% 55%);
+  --color-primary-foreground: hsl(0 0% 100%);
 
-  --color-secondary: hsl(222 15% 20%);
+  --color-secondary: hsl(0 0% 15%);
   --color-secondary-foreground: hsl(0 0% 100%);
 
-  --color-accent: hsl(190 90% 50%);
-  --color-accent-foreground: hsl(222 15% 10%);
+  --color-accent: hsl(0 0% 90%);
+  --color-accent-foreground: hsl(0 0% 10%);
 
-  --color-muted: hsl(222 15% 25%);
-  --color-muted-foreground: hsl(222 10% 70%);
+  --color-muted: hsl(0 0% 20%);
+  --color-muted-foreground: hsl(0 0% 65%);
 
-  --color-card: hsl(222 15% 14%);
+  --color-card: hsl(0 0% 10%);
   --color-card-foreground: hsl(0 0% 100%);
 
-  --color-border: hsl(222 15% 25%);
-  --color-input: hsl(222 15% 20%);
+  --color-border: hsl(0 0% 20%);
+  --color-input: hsl(0 0% 15%);
   
   --color-destructive: hsl(0 80% 60%);
   --color-destructive-foreground: hsl(0 0% 100%);

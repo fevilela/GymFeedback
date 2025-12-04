@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 // Import generated assets
 import heroImage from "@assets/generated_images/modern_dark_gym_interior_with_neon_lighting.png";
 import runnerImage from "@assets/generated_images/athletic_person_running_with_motion_blur.png";
-import weightsImage from "@assets/generated_images/close_up_of_gym_weights_with_dramatic_lighting.png";
+import logoImage from "@assets/399394586_722025015923170_6185085609781709026_n_1764870625217.jpg";
 
 const fadeIn = {
   initial: { opacity: 0, y: 20 },
@@ -27,13 +27,10 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Navigation */}
-      <header className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-lg border-b border-white/10">
+      <header className="fixed top-0 w-full z-50 bg-background/90 backdrop-blur-lg border-b border-white/10">
         <div className="container mx-auto px-4 h-20 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-primary rounded flex items-center justify-center">
-              <Dumbbell className="w-6 h-6 text-primary-foreground" />
-            </div>
-            <span className="text-2xl font-heading font-bold text-white tracking-wider">SAÚDE<span className="text-primary">FIT</span></span>
+            <img src={logoImage} alt="Saúde Fit Logo" className="h-12 w-auto object-contain rounded-md" />
           </div>
           
           <nav className="hidden md:flex items-center gap-8">
@@ -60,7 +57,7 @@ export default function Home() {
         {/* Hero Section */}
         <section className="relative h-[90vh] flex items-center overflow-hidden">
           <div className="absolute inset-0 z-0">
-            <img src={heroImage} alt="Academia Moderna" className="w-full h-full object-cover" />
+            <img src={heroImage} alt="Academia Moderna" className="w-full h-full object-cover saturate-0 brightness-50" />
             <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent" />
           </div>
           
@@ -73,7 +70,7 @@ export default function Home() {
             >
               <motion.h1 variants={fadeIn} className="text-6xl md:text-8xl font-heading font-bold leading-tight mb-6">
                 SUA MELHOR <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-400">VERSÃO</span> COMEÇA <br />
+                <span className="text-primary">VERSÃO</span> COMEÇA <br />
                 AGORA
               </motion.h1>
               
@@ -82,7 +79,7 @@ export default function Home() {
               </motion.p>
               
               <motion.div variants={fadeIn} className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 text-lg px-8 h-14 font-bold">
+                <Button size="lg" className="bg-primary text-white hover:bg-primary/90 text-lg px-8 h-14 font-bold border-0">
                   COMEÇAR AGORA <ChevronRight className="ml-2" />
                 </Button>
                 <Button size="lg" variant="outline" className="border-white/20 hover:bg-white/10 text-lg px-8 h-14">
@@ -134,7 +131,7 @@ export default function Home() {
                 <img 
                   src={runnerImage} 
                   alt="Treino Funcional" 
-                  className="relative rounded-2xl shadow-2xl border border-white/10 rotate-3 hover:rotate-0 transition-transform duration-500" 
+                  className="relative rounded-2xl shadow-2xl border border-white/10 rotate-3 hover:rotate-0 transition-transform duration-500 saturate-50" 
                 />
               </div>
               
@@ -164,8 +161,8 @@ export default function Home() {
 
                 <Link href="/feedback">
                   <div className="bg-card border border-primary/30 p-6 rounded-xl flex items-center gap-6 cursor-pointer hover:bg-card/80 transition-all group">
-                    <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center group-hover:bg-primary group-hover:text-background transition-colors">
-                      <Star className="w-6 h-6 text-primary group-hover:text-background" />
+                    <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
+                      <Star className="w-6 h-6 text-primary group-hover:text-white" />
                     </div>
                     <div>
                       <h4 className="font-heading text-xl font-bold mb-1">SUA OPINIÃO IMPORTA</h4>
@@ -183,10 +180,7 @@ export default function Home() {
       <footer className="bg-black py-12 border-t border-white/10">
         <div className="container mx-auto px-4 text-center text-muted-foreground">
           <div className="flex items-center justify-center gap-2 mb-6">
-             <div className="w-8 h-8 bg-white/10 rounded flex items-center justify-center">
-              <Dumbbell className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-xl font-heading font-bold text-white">SAÚDE<span className="text-primary">FIT</span></span>
+            <img src={logoImage} alt="Saúde Fit Logo" className="h-8 w-auto object-contain opacity-80" />
           </div>
           <p>&copy; 2025 Saúde Fit Academia. Todos os direitos reservados.</p>
         </div>

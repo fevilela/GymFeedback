@@ -6,17 +6,15 @@ import { z } from "zod";
 import { 
   Star, 
   Send, 
-  ThumbsUp, 
-  MessageSquare, 
   ChevronLeft, 
-  CheckCircle2,
-  Dumbbell
+  CheckCircle2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
+import logoImage from "@assets/399394586_722025015923170_6185085609781709026_n_1764870625217.jpg";
 
 // Schema for validation
 const feedbackSchema = z.object({
@@ -45,12 +43,11 @@ export default function Feedback() {
   const handleRatingSelect = (value: number) => {
     setRating(value);
     setValue("rating", value);
-    setTimeout(() => setStep('details'), 300); // Small delay for visual feedback
+    setTimeout(() => setStep('details'), 300);
   };
 
   const onSubmit = (data: FeedbackForm) => {
     console.log("Feedback submitted:", data);
-    // Here you would send data to backend
     setStep('success');
   };
 
@@ -59,20 +56,20 @@ export default function Feedback() {
       {/* Background Elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
         <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-primary/10 rounded-full blur-[100px]" />
-        <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[100px]" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-red-500/10 rounded-full blur-[100px]" />
       </div>
 
       {/* Header for Kiosk */}
       <div className="absolute top-8 left-0 w-full text-center z-10">
         <div className="inline-flex items-center gap-3 bg-white/5 px-6 py-3 rounded-full backdrop-blur-md border border-white/10">
-          <Dumbbell className="w-6 h-6 text-primary" />
-          <span className="font-heading text-xl font-bold tracking-wider">SAÚDE<span className="text-primary">FIT</span> FEEDBACK</span>
+          <img src={logoImage} alt="Saúde Fit" className="h-8 w-auto object-contain" />
+          <span className="font-heading text-xl font-bold tracking-wider ml-2 border-l border-white/20 pl-3">FEEDBACK</span>
         </div>
       </div>
 
       <Link href="/">
         <Button variant="ghost" className="absolute top-8 left-8 text-muted-foreground hover:text-white z-20">
-          <ChevronLeft className="mr-2" /> Voltar ao Site
+          <ChevronLeft className="mr-2" /> Voltar
         </Button>
       </Link>
 
@@ -108,7 +105,7 @@ export default function Feedback() {
                     <Star 
                       className={`w-16 h-16 md:w-24 md:h-24 transition-all duration-300 ${
                         rating >= star 
-                          ? "fill-primary text-primary drop-shadow-[0_0_15px_rgba(204,255,0,0.5)]" 
+                          ? "fill-primary text-primary drop-shadow-[0_0_15px_rgba(220,20,60,0.5)]" 
                           : "text-muted fill-transparent group-hover:text-primary/50"
                       }`} 
                     />
