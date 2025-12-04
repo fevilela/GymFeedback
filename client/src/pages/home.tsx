@@ -9,6 +9,10 @@ import heroImage from "@assets/generated_images/modern_dark_gym_interior_with_ne
 import runnerImage from "@assets/generated_images/athletic_person_running_with_motion_blur.png";
 import logoImage from "@assets/399394586_722025015923170_6185085609781709026_n_1764870625217.jpg";
 
+import unit1Image from "@assets/generated_images/modern_gym_exterior_on_a_city_street_day_time.png";
+import unit2Image from "@assets/generated_images/modern_gym_exterior_on_a_wide_avenue_day_time.png";
+import { MapPin } from "lucide-react";
+
 const fadeIn = {
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
@@ -178,6 +182,69 @@ export default function Home() {
                     <ChevronRight className="ml-auto text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
                   </div>
                 </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+        {/* Units Section */}
+        <section id="unidades" className="py-20 bg-card/30 border-t border-white/5">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-heading font-bold mb-4">NOSSAS <span className="text-primary">UNIDADES</span></h2>
+              <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+                Encontre a Saúde Fit mais próxima de você e comece sua transformação hoje mesmo.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+              {/* Unit 1 */}
+              <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-card">
+                <div className="aspect-video overflow-hidden">
+                  <img 
+                    src={unit1Image} 
+                    alt="Unidade Vila São Francisco" 
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 saturate-50 group-hover:saturate-100"
+                  />
+                </div>
+                <div className="p-6">
+                  <h3 className="text-2xl font-heading font-bold mb-2">UNIDADE 1</h3>
+                  <div className="flex items-start gap-3 text-muted-foreground mb-4">
+                    <MapPin className="w-5 h-5 text-primary shrink-0 mt-1" />
+                    <p>R. Barão do Rio Branco, 37<br/>Vila São Francisco, Lavras - MG<br/>CEP: 37200-000</p>
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    className="w-full border-primary/50 text-primary hover:bg-primary hover:text-white font-bold"
+                    onClick={() => window.open("https://maps.google.com/?q=R.+Barão+do+Rio+Branco,+37+-+Vila+Sao+Francisco,+Lavras+-+MG,+37200-000", "_blank")}
+                  >
+                    VER NO MAPA
+                  </Button>
+                </div>
+              </div>
+
+              {/* Unit 2 */}
+              <div className="group relative overflow-hidden rounded-xl border border-white/10 bg-card">
+                <div className="aspect-video overflow-hidden">
+                  <img 
+                    src={unit2Image} 
+                    alt="Unidade Belo Horizonte" 
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 saturate-50 group-hover:saturate-100"
+                  />
+                </div>
+                <div className="p-6">
+                  <h3 className="text-2xl font-heading font-bold mb-2">UNIDADE 2</h3>
+                  <div className="flex items-start gap-3 text-muted-foreground mb-4">
+                    <MapPin className="w-5 h-5 text-primary shrink-0 mt-1" />
+                    <p>Av. Dr. Silvio Menicucci, 2126<br/>Belo Horizonte, Lavras - MG<br/>CEP: 37200-000</p>
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    className="w-full border-primary/50 text-primary hover:bg-primary hover:text-white font-bold"
+                    onClick={() => window.open("https://maps.google.com/?q=Av.+Dr.+Silvio+Menicucci,+2126+-+Belo+Horizonte,+Lavras+-+MG,+37200-000", "_blank")}
+                  >
+                    VER NO MAPA
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
