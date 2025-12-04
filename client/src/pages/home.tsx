@@ -255,7 +255,10 @@ export default function Home() {
                       <Check className="w-5 h-5 text-primary shrink-0" /> <span>Sem fidelidade</span>
                     </li>
                   </ul>
-                  <Button className="w-full bg-white/10 hover:bg-white/20 text-white font-bold">
+                  <Button 
+                    className="w-full bg-white/10 hover:bg-white/20 text-white font-bold"
+                    onClick={() => window.open("https://api.whatsapp.com/send/?phone=5535999384418&text=Ol%C3%A1%2C%20gostaria%20de%20me%20matricular%20no%20plano%20Avulso!", "_blank")}
+                  >
                     ESCOLHER AVULSO
                   </Button>
                 </CardContent>
@@ -285,7 +288,10 @@ export default function Home() {
                       <Check className="w-5 h-5 text-primary shrink-0" /> <span>Apenas cartão de crédito</span>
                     </li>
                   </ul>
-                  <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold h-12 text-lg">
+                  <Button 
+                    className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold h-12 text-lg"
+                    onClick={() => window.open("https://api.whatsapp.com/send/?phone=5535999384418&text=Ol%C3%A1%2C%20gostaria%20de%20me%20matricular%20no%20plano%20Recorrente!", "_blank")}
+                  >
                     QUERO ESTE PLANO
                   </Button>
                 </CardContent>
@@ -316,7 +322,10 @@ export default function Home() {
                       <Check className="w-5 h-5 text-primary shrink-0" /> <span>Melhor custo-benefício</span>
                     </li>
                   </ul>
-                  <Button className="w-full bg-white/10 hover:bg-white/20 text-white font-bold">
+                  <Button 
+                    className="w-full bg-white/10 hover:bg-white/20 text-white font-bold"
+                    onClick={() => window.open("https://api.whatsapp.com/send/?phone=5535999384418&text=Ol%C3%A1%2C%20gostaria%20de%20me%20matricular%20no%20plano%20Anual!", "_blank")}
+                  >
                     ESCOLHER ANUAL
                   </Button>
                 </CardContent>
