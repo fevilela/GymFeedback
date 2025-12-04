@@ -156,12 +156,16 @@ export default function Home() {
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
                   {[
-                    "Musculação High-Tech",
-                    "Cross Training",
-                    "Fit Dance",
-                    "Pilates Studio",
-                    "Spinning Imersivo",
-                    "Avaliação Bioimpedância"
+                    "Spinning",
+                    "Boxe",
+                    "Muay Thai",
+                    "Dança",
+                    "Ritbox",
+                    "Jump",
+                    "Funcional",
+                    "Step",
+                    "Pilates Solo",
+                    "Jiu Jitsu (Adulto e Kids)"
                   ].map((item, i) => (
                     <div key={i} className="flex items-center gap-3">
                       <div className="w-2 h-2 bg-primary rounded-full" />
