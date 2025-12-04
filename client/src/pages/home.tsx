@@ -3,6 +3,13 @@ import { motion } from "framer-motion";
 import { Star, ChevronRight, Dumbbell, Users, Clock, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 // Import generated assets
 import heroImage from "@assets/generated_images/modern_dark_gym_interior_with_neon_lighting.png";
@@ -11,6 +18,12 @@ import logoImage from "@assets/399394586_722025015923170_6185085609781709026_n_1
 
 import unit1Image from "@assets/generated_images/modern_gym_exterior_on_a_city_street_day_time.png";
 import unit2Image from "@assets/generated_images/modern_gym_exterior_on_a_wide_avenue_day_time.png";
+
+import sandCourtImage from "@assets/generated_images/outdoor_sand_court_for_beach_tennis_or_volleyball.png";
+import danceClassImage from "@assets/generated_images/group_dance_class_in_a_gym_studio.png";
+import weightTrainingImage from "@assets/generated_images/modern_weight_training_area_with_equipment.png";
+import martialArtsImage from "@assets/generated_images/people_training_martial_arts_in_a_gym.png";
+
 import { MapPin } from "lucide-react";
 
 const fadeIn = {
@@ -139,11 +152,29 @@ export default function Home() {
             <div className="grid md:grid-cols-2 gap-16 items-center">
               <div className="relative">
                 <div className="absolute -inset-4 bg-primary/20 blur-3xl rounded-full" />
-                <img 
-                  src={runnerImage} 
-                  alt="Treino Funcional" 
-                  className="relative rounded-2xl shadow-2xl border border-white/10 rotate-3 hover:rotate-0 transition-transform duration-500 saturate-50" 
-                />
+                <Carousel className="w-full max-w-lg mx-auto" opts={{ loop: true }}>
+                  <CarouselContent>
+                    {[
+                      runnerImage, 
+                      sandCourtImage, 
+                      weightTrainingImage, 
+                      danceClassImage, 
+                      martialArtsImage
+                    ].map((img, index) => (
+                      <CarouselItem key={index}>
+                        <div className="p-1">
+                          <img 
+                            src={img} 
+                            alt={`Galeria da Academia ${index + 1}`} 
+                            className="aspect-square object-cover rounded-2xl shadow-2xl border border-white/10 w-full saturate-50 hover:saturate-100 transition-all duration-500" 
+                          />
+                        </div>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious className="left-4" />
+                  <CarouselNext className="right-4" />
+                </Carousel>
               </div>
               
               <div>
@@ -156,6 +187,9 @@ export default function Home() {
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
                   {[
+                    "Musculação",
+                    "Ritmos",
+                    "Quadras de areia",
                     "Spinning",
                     "Boxe",
                     "Muay Thai",
