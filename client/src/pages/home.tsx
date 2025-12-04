@@ -46,7 +46,10 @@ export default function Home() {
                 AVALIAR
               </Button>
             </Link>
-            <Button className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold">
+            <Button 
+              onClick={() => window.open("https://api.whatsapp.com/send/?phone=5535999384418&text=Ol%C3%A1%2C%20vim%20pelo%20site%20da%20academia%20e%20gostaria%20de%20fazer%20a%20minha%20matricula!", "_blank")}
+              className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold"
+            >
               MATRICULE-SE
             </Button>
           </div>
@@ -79,7 +82,11 @@ export default function Home() {
               </motion.p>
               
               <motion.div variants={fadeIn} className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="bg-primary text-white hover:bg-primary/90 text-lg px-8 h-14 font-bold border-0">
+                <Button 
+                  onClick={() => window.open("https://api.whatsapp.com/send/?phone=5535999384418&text=Ol%C3%A1%2C%20vim%20pelo%20site%20da%20academia%20e%20gostaria%20de%20fazer%20a%20minha%20matricula!", "_blank")}
+                  size="lg" 
+                  className="bg-primary text-white hover:bg-primary/90 text-lg px-8 h-14 font-bold border-0"
+                >
                   COMEÇAR AGORA <ChevronRight className="ml-2" />
                 </Button>
                 <Button size="lg" variant="outline" className="border-white/20 hover:bg-white/10 text-lg px-8 h-14">
