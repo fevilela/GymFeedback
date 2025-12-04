@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { motion } from "framer-motion";
-import { Star, ChevronRight, Dumbbell, Users, Clock, Trophy } from "lucide-react";
+import { Star, ChevronRight, Dumbbell, Users, Clock, Trophy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -224,6 +224,107 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* Plans Section */}
+        <section id="planos" className="py-20 bg-background border-t border-white/5">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-heading font-bold mb-4">ESCOLHA SEU <span className="text-primary">PLANO</span></h2>
+              <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+                Opções flexíveis que se adaptam ao seu estilo de vida e objetivos.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+              {/* Avulso */}
+              <Card className="bg-card border-white/10 relative overflow-hidden hover:border-primary/50 transition-all">
+                <CardContent className="p-8 flex flex-col h-full">
+                  <h3 className="text-2xl font-heading font-bold mb-2">AVULSO</h3>
+                  <div className="mb-6">
+                    <span className="text-4xl font-bold text-white">R$ 179,90</span>
+                    <span className="text-muted-foreground">/mês</span>
+                  </div>
+                  <ul className="space-y-4 mb-8 flex-grow">
+                    <li className="flex items-start gap-3 text-muted-foreground">
+                      <Check className="w-5 h-5 text-primary shrink-0" /> <span>Acesso de 1 mês</span>
+                    </li>
+                    <li className="flex items-start gap-3 text-muted-foreground">
+                      <Check className="w-5 h-5 text-primary shrink-0" /> <span>Acesso a apenas uma unidade</span>
+                    </li>
+                    <li className="flex items-start gap-3 text-muted-foreground">
+                      <Check className="w-5 h-5 text-primary shrink-0" /> <span>Sem fidelidade</span>
+                    </li>
+                  </ul>
+                  <Button className="w-full bg-white/10 hover:bg-white/20 text-white font-bold">
+                    ESCOLHER AVULSO
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* Recorrente */}
+              <Card className="bg-card border-primary relative overflow-hidden transform md:-translate-y-4 shadow-2xl shadow-primary/10">
+                <div className="absolute top-0 left-0 w-full h-1 bg-primary" />
+                <div className="absolute top-4 right-4 bg-primary text-primary-foreground text-xs font-bold px-2 py-1 rounded uppercase">Popular</div>
+                <CardContent className="p-8 flex flex-col h-full">
+                  <h3 className="text-2xl font-heading font-bold mb-2">RECORRENTE</h3>
+                  <div className="mb-6">
+                    <span className="text-4xl font-bold text-white">R$ 149,90</span>
+                    <span className="text-muted-foreground">/mês</span>
+                  </div>
+                  <ul className="space-y-4 mb-8 flex-grow">
+                    <li className="flex items-start gap-3 text-white">
+                      <Check className="w-5 h-5 text-primary shrink-0" /> <span>Cobrança mensal automática</span>
+                    </li>
+                    <li className="flex items-start gap-3 text-white">
+                      <Check className="w-5 h-5 text-primary shrink-0" /> <span>3 meses de fidelidade</span>
+                    </li>
+                    <li className="flex items-start gap-3 text-white">
+                      <Check className="w-5 h-5 text-primary shrink-0" /> <span>Acesso a <strong>AMBAS</strong> as unidades</span>
+                    </li>
+                    <li className="flex items-start gap-3 text-white">
+                      <Check className="w-5 h-5 text-primary shrink-0" /> <span>Apenas cartão de crédito</span>
+                    </li>
+                  </ul>
+                  <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold h-12 text-lg">
+                    QUERO ESTE PLANO
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* Anual */}
+              <Card className="bg-card border-white/10 relative overflow-hidden hover:border-primary/50 transition-all">
+                <CardContent className="p-8 flex flex-col h-full">
+                  <h3 className="text-2xl font-heading font-bold mb-2">ANUAL</h3>
+                  <div className="mb-1">
+                    <span className="text-4xl font-bold text-white">R$ 119,90</span>
+                    <span className="text-muted-foreground">/mês</span>
+                  </div>
+                  <div className="text-sm text-muted-foreground mb-6">
+                    Total de R$ 1438,80 (em até 12x)
+                  </div>
+                  <ul className="space-y-4 mb-8 flex-grow">
+                    <li className="flex items-start gap-3 text-muted-foreground">
+                      <Check className="w-5 h-5 text-primary shrink-0" /> <span>Acesso a <strong>AMBAS</strong> as unidades</span>
+                    </li>
+                    <li className="flex items-start gap-3 text-muted-foreground">
+                      <Check className="w-5 h-5 text-primary shrink-0" /> <span>Direito a 30 dias de trancamento</span>
+                    </li>
+                    <li className="flex items-start gap-3 text-muted-foreground">
+                      <Check className="w-5 h-5 text-primary shrink-0" /> <span>Compromete limite do cartão</span>
+                    </li>
+                    <li className="flex items-start gap-3 text-muted-foreground">
+                      <Check className="w-5 h-5 text-primary shrink-0" /> <span>Melhor custo-benefício</span>
+                    </li>
+                  </ul>
+                  <Button className="w-full bg-white/10 hover:bg-white/20 text-white font-bold">
+                    ESCOLHER ANUAL
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+
         {/* Units Section */}
         <section id="unidades" className="py-20 bg-card/30 border-t border-white/5">
           <div className="container mx-auto px-4">
