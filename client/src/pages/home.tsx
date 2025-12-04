@@ -147,7 +147,7 @@ export default function Home() {
         </section>
 
         {/* Feature Highlight */}
-        <section className="py-32 relative overflow-hidden">
+        <section id="modalidades" className="py-32 relative overflow-hidden">
           <div className="container mx-auto px-4 relative z-10">
             <div className="grid md:grid-cols-2 gap-16 items-center">
               <div className="relative">
