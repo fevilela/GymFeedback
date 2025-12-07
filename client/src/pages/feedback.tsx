@@ -27,6 +27,7 @@ import receptionistFemale from "@assets/generated_images/professional_portrait_o
 import receptionistMale from "@assets/generated_images/professional_portrait_of_a_friendly_gym_receptionist,_male,_smiling,_uniform.png";
 import instructorMale from "@assets/generated_images/professional_portrait_of_a_fitness_instructor,_male,_muscular,_gym_background.png";
 import instructorFemale from "@assets/generated_images/professional_portrait_of_a_fitness_instructor,_female,_athletic,_gym_background.png";
+import { INITIAL_FEEDBACKS } from "@/data/mockData";
 
 // Mock Data for People
 const STAFF = {
@@ -132,6 +133,28 @@ export default function Feedback() {
 
   const onSubmit = (data: FeedbackForm) => {
     console.log("Feedback submitted:", data);
+
+    // Save to localStorage to simulate Google Sheets persistence
+    const newFeedback = {
+      id: Math.random().toString(36).substr(2, 9),
+      category: data.category,
+      personId: data.personId,
+      personName: selectedPerson?.name,
+      rating: data.rating,
+      message: data.message,
+      userName: data.userName,
+      date: new Date().toISOString(),
+    };
+
+    const existingFeedbacks = JSON.parse(
+      localStorage.getItem("feedbacks") || JSON.stringify(INITIAL_FEEDBACKS)
+    );
+    const updatedFeedbacks = [...existingFeedbacks, newFeedback];
+    localStorage.setItem("feedbacks", JSON.stringify(updatedFeedbacks));
+
+    // Dispatch event so dashboard updates if open in another tab
+    window.dispatchEvent(new Event("storage"));
+
     setStep("success");
   };
 

@@ -84,6 +84,14 @@ export default function Home() {
           </nav>
 
           <div className="flex items-center gap-4">
+            <Link href="/dashboard">
+              <Button
+                variant="ghost"
+                className="text-muted-foreground hover:text-primary hidden lg:flex font-bold uppercase text-xs tracking-wider"
+              >
+                Área do Gestor
+              </Button>
+            </Link>
             <Link href="/feedback">
               <Button
                 variant="outline"
