@@ -8,6 +8,15 @@ import {
   Clock,
   Trophy,
   Check,
+  Snowflake,
+  UserCog,
+  Smartphone,
+  ShieldCheck,
+  Building2,
+  Medal,
+  ShowerHead,
+  Armchair,
+  Car,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -192,28 +201,116 @@ export default function Home() {
           </motion.div>
         </section>
 
-        {/* Stats Section */}
+        {/* Features Section */}
         <section className="py-20 bg-background border-b border-white/5">
           <div className="container mx-auto px-4">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
+                POR QUE ESCOLHER A{" "}
+                <span className="text-primary">SAÚDE FIT</span>?
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[
-                { number: "24/7", label: "HORÁRIO LIVRE", icon: Clock },
-                { number: "150+", label: "EQUIPAMENTOS", icon: Dumbbell },
-                { number: "30+", label: "AULAS DIÁRIAS", icon: Users },
-                { number: "15", label: "ANOS DE HISTÓRIA", icon: Trophy },
-              ].map((stat, index) => (
-                <div
+                {
+                  title: "Máquinas de Alta Performance e Qualidade",
+                  description:
+                    "Contamos com equipamentos de última geração, garantindo o máximo de conforto e eficiência em cada treino.",
+                  icon: Dumbbell,
+                },
+                {
+                  title: "Ambiente 100% Climatizado",
+                  description:
+                    "Treine com conforto durante todo o ano! Nosso espaço é totalmente climatizado para você se sentir bem em qualquer estação.",
+                  icon: Snowflake,
+                },
+                {
+                  title: "Treinamento Personalizado",
+                  description:
+                    "Cada corpo é único. Nossos treinadores criam planos de treino que atendem suas necessidades e objetivos individuais.",
+                  icon: UserCog,
+                },
+                {
+                  title: "Aplicativo exclusivo de treino",
+                  description:
+                    "Acompanhe seu treino e todas sua evolução nosso aplicativo exclusivo.",
+                  icon: Smartphone,
+                },
+                {
+                  title: "Ambiente Seguro e Equipamentos Certificados",
+                  description:
+                    "Nossas máquinas são periodicamente inspecionadas e passam por manutenção regular, garantindo um treino seguro e eficaz para você.",
+                  icon: ShieldCheck,
+                },
+                {
+                  title: "Estrutura Completa",
+                  description:
+                    "Com equipamentos modernos e ambiente acolhedor, oferecemos tudo o que você precisa para treinar de forma eficaz e segura.",
+                  icon: Building2,
+                },
+                {
+                  title: "Profissionais qualificados",
+                  description:
+                    "Treinadores especializados para acompanhar seu desempenho.",
+                  icon: Medal,
+                },
+                {
+                  title: "Vestiários Amplos com Chuveiros",
+                  description: "Conforto e praticidade para sua rotina.",
+                  icon: ShowerHead,
+                },
+                {
+                  title: "Cadeiras de Massagem",
+                  description: "Relaxe após o treino com máximo conforto.",
+                  icon: Armchair,
+                },
+                {
+                  title: "Quadras de Beach Tennis e Futevôlei",
+                  subtitle: "Unidade Perimetral",
+                  description:
+                    "Oferecemos tudo o que você precisa para treinar e praticar esportes de forma eficaz e segura.",
+                  icon: Trophy,
+                },
+                {
+                  title: "Estacionamento Próprio",
+                  subtitle: "Unidade Perimetral",
+                  description:
+                    "Estacione com segurança: temos vagas exclusivas para alunos.",
+                  icon: Car,
+                },
+              ].map((feature, index) => (
+                <motion.div
                   key={index}
-                  className="text-center p-6 glass-panel rounded-xl hover:border-primary/50 transition-colors group"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1, duration: 0.5 }}
+                  viewport={{ once: true }}
+                  className="relative group h-full"
                 >
-                  <stat.icon className="w-8 h-8 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform" />
-                  <h3 className="text-4xl font-heading font-bold text-white mb-2">
-                    {stat.number}
-                  </h3>
-                  <p className="text-sm text-muted-foreground font-medium tracking-wider">
-                    {stat.label}
-                  </p>
-                </div>
+                  <div className="absolute -inset-0.5 bg-linear-to-r from-primary to-primary/50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
+                  <div className="relative p-6 h-full bg-card rounded-2xl border border-white/10 hover:border-transparent transition-colors duration-300 flex flex-col items-start overflow-hidden">
+                    <div className="absolute top-0 right-0 p-24 bg-primary/5 rounded-full blur-3xl -mr-12 -mt-12 transition-all duration-500 group-hover:bg-primary/10" />
+
+                    <div className="w-10 h-10 rounded-xl bg-linear-to-br from-primary/20 to-primary/5 border border-primary/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-500 relative z-10 shadow-inner shrink-0">
+                      <feature.icon className="w-5 h-5 text-primary" />
+                    </div>
+
+                    <div className="relative z-10">
+                      <h3 className="text-lg font-heading font-bold text-white mb-1 group-hover:text-primary transition-colors duration-300 leading-tight">
+                        {feature.title}
+                      </h3>
+                      {feature.subtitle && (
+                        <span className="text-[10px] font-bold text-primary uppercase tracking-wider mb-1 block bg-primary/10 w-fit px-2 py-0.5 rounded">
+                          {feature.subtitle}
+                        </span>
+                      )}
+                      <p className="text-xs text-muted-foreground leading-relaxed group-hover:text-gray-300 transition-colors duration-300 mt-2">
+                        {feature.description}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
               ))}
             </div>
           </div>

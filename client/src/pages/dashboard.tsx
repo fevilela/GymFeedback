@@ -217,101 +217,93 @@ export default function Dashboard() {
 
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Filters Section */}
-        <Card className="bg-card/50 backdrop-blur-sm border-white/10">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Filter className="w-5 h-5 text-primary" /> Filtros
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col md:flex-row gap-4">
-              {/* Date Filter */}
-              <div className="grid gap-2">
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      id="date"
-                      variant={"outline"}
-                      className={cn(
-                        "w-[300px] justify-start text-left font-normal",
-                        !date && "text-muted-foreground"
-                      )}
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {date?.from ? (
-                        date.to ? (
-                          <>
-                            {format(date.from, "dd/MM/yyyy")} -{" "}
-                            {format(date.to, "dd/MM/yyyy")}
-                          </>
-                        ) : (
-                          format(date.from, "dd/MM/yyyy")
-                        )
-                      ) : (
-                        <span>Selecione um período</span>
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent
-                    className="w-auto p-0 bg-zinc-950 border-zinc-800"
-                    align="start"
-                  >
-                    <Calendar
-                      initialFocus
-                      mode="range"
-                      defaultMonth={date?.from}
-                      selected={date}
-                      onSelect={setDate}
-                      numberOfMonths={2}
-                      className="bg-zinc-950 text-white"
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-
-              {/* Person Filter */}
-              <div className="w-[250px]">
-                <Select
-                  value={selectedPerson}
-                  onValueChange={setSelectedPerson}
+        <div className="flex flex-col md:flex-row gap-4 items-end bg-card/50 backdrop-blur-sm border border-white/10 p-6 rounded-xl">
+          <div className="grid gap-2">
+            <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+              <CalendarIcon className="w-4 h-4" /> Período
+            </label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  id="date"
+                  variant={"outline"}
+                  className={cn(
+                    "w-[300px] justify-start text-left font-normal bg-background/50 border-white/10 hover:bg-white/5 hover:text-white transition-all",
+                    !date && "text-muted-foreground"
+                  )}
                 >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Filtrar por Colaborador" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-zinc-950 border-zinc-800 text-white">
-                    <SelectItem
-                      value="all"
-                      className="focus:bg-zinc-800 focus:text-white"
-                    >
-                      Todos os Colaboradores
-                    </SelectItem>
-                    {uniquePeople.map((person) => (
-                      <SelectItem
-                        key={person}
-                        value={person}
-                        className="focus:bg-zinc-800 focus:text-white"
-                      >
-                        {person}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Clear Filters */}
-              <Button
-                variant="ghost"
-                onClick={() => {
-                  setDate({ from: subDays(new Date(), 30), to: new Date() });
-                  setSelectedPerson("all");
-                }}
-                className="text-muted-foreground hover:text-white"
+                  {date?.from ? (
+                    date.to ? (
+                      <>
+                        {format(date.from, "dd/MM/yyyy")} -{" "}
+                        {format(date.to, "dd/MM/yyyy")}
+                      </>
+                    ) : (
+                      format(date.from, "dd/MM/yyyy")
+                    )
+                  ) : (
+                    <span>Selecione um período</span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent
+                className="w-auto p-0 bg-zinc-950 border-zinc-800 shadow-2xl rounded-xl overflow-hidden"
+                align="start"
               >
-                <X className="w-4 h-4 mr-2" /> Limpar Filtros
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+                <Calendar
+                  initialFocus
+                  mode="range"
+                  defaultMonth={date?.from}
+                  selected={date}
+                  onSelect={setDate}
+                  numberOfMonths={2}
+                  className="bg-zinc-950 text-white p-4"
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+
+          {/* Person Filter */}
+          <div className="w-[250px] grid gap-2">
+            <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+              <Users className="w-4 h-4" /> Colaborador
+            </label>
+            <Select value={selectedPerson} onValueChange={setSelectedPerson}>
+              <SelectTrigger className="bg-background/50 border-white/10 hover:bg-white/5 transition-all">
+                <SelectValue placeholder="Filtrar por Colaborador" />
+              </SelectTrigger>
+              <SelectContent className="bg-zinc-950 border-zinc-800 text-white">
+                <SelectItem
+                  value="all"
+                  className="focus:bg-zinc-800 focus:text-white cursor-pointer"
+                >
+                  Todos os Colaboradores
+                </SelectItem>
+                {uniquePeople.map((person) => (
+                  <SelectItem
+                    key={person}
+                    value={person}
+                    className="focus:bg-zinc-800 focus:text-white cursor-pointer"
+                  >
+                    {person}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Clear Filters */}
+          <Button
+            variant="ghost"
+            onClick={() => {
+              setDate({ from: subDays(new Date(), 30), to: new Date() });
+              setSelectedPerson("all");
+            }}
+            className="text-muted-foreground hover:text-white hover:bg-white/5 mb-px"
+          >
+            <X className="w-4 h-4 mr-2" /> Limpar Filtros
+          </Button>
+        </div>
 
         {/* KPI Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
