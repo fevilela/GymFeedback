@@ -1,162 +1,103 @@
-import { useState, useEffect } from "react";
-import { INITIAL_FEEDBACKS } from "@/data/mockData";
-
-// Types
-export interface Collaborator {
-  id: string;
-  name: string;
-  role: string;
-  unit: string;
-  image?: string;
-  active: boolean;
-}
-
-export interface FeedbackItem {
-  id: string;
-  category: string;
-  personId?: string;
-  personName?: string;
-  rating: number;
-  message?: string;
-  userName?: string;
-  userEmail?: string;
-  date: string;
-  unit?: string; // Added unit to feedback
-}
-
-export const INITIAL_COLLABORATORS: Collaborator[] = [];
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { queryClient, apiRequest } from "@/lib/queryClient";
+import {
+  type Collaborator,
+  type Feedback,
+  type InsertCollaborator,
+  type InsertFeedback,
+} from "@shared/schema";
 
 export const UNITS = ["Unidade Centro", "Unidade Perimetral"];
 export const ROLES = ["Recepcionista", "Professor", "Limpeza", "Gerente"];
 
-// Hook
 export function useStore() {
-  const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
-  const [feedbacks, setFeedbacks] = useState<FeedbackItem[]>([]);
-  const [units] = useState<string[]>(UNITS);
-  const [roles] = useState<string[]>(ROLES);
+  const { data: collaborators = [] } = useQuery<Collaborator[]>({
+    queryKey: ["/api/collaborators"],
+  });
 
-  // Load initial data
-  useEffect(() => {
-    const loadData = () => {
-      // Collaborators
-      const storedCollabs = localStorage.getItem("collaborators");
-      if (storedCollabs) {
-        setCollaborators(JSON.parse(storedCollabs));
-      } else {
-        localStorage.setItem(
-          "collaborators",
-          JSON.stringify(INITIAL_COLLABORATORS)
-        );
-        setCollaborators(INITIAL_COLLABORATORS);
+  const { data: feedbacks = [] } = useQuery<Feedback[]>({
+    queryKey: ["/api/feedbacks"],
+  });
+
+  const addCollaboratorMutation = useMutation({
+    mutationFn: async (collab: InsertCollaborator) => {
+      const res = await apiRequest("POST", "/api/collaborators", collab);
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/collaborators"] });
+    },
+  });
+
+  const updateCollaboratorMutation = useMutation({
+    mutationFn: async ({
+      id,
+      ...updates
+    }: { id: number } & Partial<Collaborator>) => {
+      const res = await apiRequest("PUT", `/api/collaborators/${id}`, updates);
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/collaborators"] });
+    },
+  });
+
+  const removeCollaboratorMutation = useMutation({
+    mutationFn: async (id: number) => {
+      await apiRequest("DELETE", `/api/collaborators/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/collaborators"] });
+    },
+  });
+
+  const addFeedbackMutation = useMutation({
+    mutationFn: async (feedback: InsertFeedback) => {
+      // Check for duplicate feedback before sending
+      if (feedback.personId && feedback.userEmail) {
+        const oneWeekAgo = new Date();
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+        const existingFeedback = feedbacks.find((f) => {
+          return (
+            f.personId === feedback.personId &&
+            f.userEmail === feedback.userEmail &&
+            new Date(f.date) > oneWeekAgo
+          );
+        });
+
+        if (existingFeedback) {
+          throw new Error("Você já avaliou este profissional nesta semana.");
+        }
       }
 
-      // Feedbacks
-      const storedFeedbacks = localStorage.getItem("feedbacks");
-      if (storedFeedbacks) {
-        setFeedbacks(JSON.parse(storedFeedbacks));
-      } else {
-        localStorage.setItem("feedbacks", JSON.stringify(INITIAL_FEEDBACKS));
-        setFeedbacks(INITIAL_FEEDBACKS);
-      }
-    };
-
-    loadData();
-
-    // Listen for storage events to sync across tabs
-    const handleStorage = () => loadData();
-    window.addEventListener("storage", handleStorage);
-    return () => window.removeEventListener("storage", handleStorage);
-  }, []);
-
-  const addCollaborator = (collab: Omit<Collaborator, "id" | "active">) => {
-    const newCollab: Collaborator = {
-      ...collab,
-      id: Math.random().toString(36).substr(2, 9),
-      active: true,
-      // Use a placeholder if no image provided, or we could generate one later
-      image:
-        collab.image ||
-        `https://api.dicebear.com/7.x/avataaars/svg?seed=${collab.name}`,
-    };
-
-    const updated = [...collaborators, newCollab];
-    setCollaborators(updated);
-    localStorage.setItem("collaborators", JSON.stringify(updated));
-    window.dispatchEvent(new Event("storage"));
-  };
-
-  const addFeedback = (feedback: Omit<FeedbackItem, "id" | "date">) => {
-    // Check for existing feedback from same email for same person within 7 days
-    if (feedback.personId && feedback.userEmail) {
-      const oneWeekAgo = new Date();
-      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-
-      const existingFeedback = feedbacks.find((f) => {
-        return (
-          f.personId === feedback.personId &&
-          f.userEmail === feedback.userEmail &&
-          new Date(f.date) > oneWeekAgo
-        );
-      });
-
-      if (existingFeedback) {
-        return {
-          success: false,
-          message: "Você já avaliou este profissional nesta semana.",
-        };
-      }
-    }
-
-    const newFeedback: FeedbackItem = {
-      ...feedback,
-      id: Math.random().toString(36).substr(2, 9),
-      date: new Date().toISOString(),
-    };
-
-    // If personId is present, try to find their unit
-    if (newFeedback.personId && !newFeedback.unit) {
-      const person = collaborators.find((c) => c.id === newFeedback.personId);
-      if (person) {
-        newFeedback.unit = person.unit;
-      }
-    }
-
-    const updated = [...feedbacks, newFeedback];
-    setFeedbacks(updated);
-    localStorage.setItem("feedbacks", JSON.stringify(updated));
-    window.dispatchEvent(new Event("storage"));
-
-    return { success: true };
-  };
-
-  const updateCollaborator = (
-    id: string,
-    updates: Partial<Omit<Collaborator, "id">>
-  ) => {
-    const updated = collaborators.map((c) =>
-      c.id === id ? { ...c, ...updates } : c
-    );
-    setCollaborators(updated);
-    localStorage.setItem("collaborators", JSON.stringify(updated));
-    window.dispatchEvent(new Event("storage"));
-  };
-
-  const removeCollaborator = (id: string) => {
-    const updated = collaborators.filter((c) => c.id !== id);
-    setCollaborators(updated);
-    localStorage.setItem("collaborators", JSON.stringify(updated));
-    window.dispatchEvent(new Event("storage"));
-  };
+      const res = await apiRequest("POST", "/api/feedbacks", feedback);
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/feedbacks"] });
+    },
+  });
 
   return {
     collaborators,
     feedbacks,
-    units,
-    roles,
-    addCollaborator,
-    updateCollaborator,
-    removeCollaborator,
-    addFeedback,
+    units: UNITS,
+    roles: ROLES,
+    addCollaborator: addCollaboratorMutation.mutateAsync,
+    updateCollaborator: (id: number, updates: Partial<Collaborator>) =>
+      updateCollaboratorMutation.mutateAsync({ id, ...updates }),
+    removeCollaborator: removeCollaboratorMutation.mutateAsync,
+    addFeedback: async (feedback: InsertFeedback) => {
+      try {
+        await addFeedbackMutation.mutateAsync(feedback);
+        return { success: true };
+      } catch (e: any) {
+        return {
+          success: false,
+          message: e.message || "Erro ao enviar feedback",
+        };
+      }
+    },
   };
 }

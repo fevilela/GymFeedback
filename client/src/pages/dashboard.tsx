@@ -88,7 +88,9 @@ export default function Dashboard() {
 
     // Filter by Person
     if (selectedPerson && selectedPerson !== "all") {
-      result = result.filter((item) => item.personId === selectedPerson);
+      result = result.filter(
+        (item) => item.personId === parseInt(selectedPerson)
+      );
     }
 
     // Filter by Unit
@@ -155,8 +157,8 @@ export default function Dashboard() {
 
   // 3. Top Staff
   const staffMap = new Map<
-    string,
-    { name: string; total: number; count: number; image?: string }
+    number,
+    { name: string; total: number; count: number; image?: string | null }
   >();
 
   filteredFeedbacks.forEach((f) => {
@@ -252,7 +254,7 @@ export default function Dashboard() {
               <SelectContent>
                 <SelectItem value="all">Todos os Colaboradores</SelectItem>
                 {collaborators.map((c) => (
-                  <SelectItem key={c.id} value={c.id}>
+                  <SelectItem key={c.id} value={String(c.id)}>
                     {c.name}
                   </SelectItem>
                 ))}

@@ -10,20 +10,40 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+import { apiRequest } from "@/lib/queryClient";
 import logoImage from "@assets/399394586_722025015923170_6185085609781709026_n_1764870625217.jpg";
 
 export default function Login() {
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [_, setLocation] = useLocation();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === "admin") {
-      localStorage.setItem("isAuthenticated", "true");
-      setLocation("/dashboard");
-    } else {
+    setIsLoading(true);
+    setError(false);
+
+    try {
+      const res = await apiRequest("POST", "/api/login", {
+        username: email,
+        password,
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        localStorage.setItem("isAuthenticated", "true");
+        localStorage.setItem("userEmail", email);
+        setLocation("/dashboard");
+      } else {
+        setError(true);
+      }
+    } catch (e) {
+      console.error(e);
       setError(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -41,38 +61,66 @@ export default function Login() {
             <Lock className="w-8 h-8 text-primary" />
           </div>
           <CardTitle className="text-2xl font-heading font-bold">
-            Área Restrita
+            Área do Gestor
           </CardTitle>
           <CardDescription>
-            Acesso exclusivo para gestores da Saúde Fit.
+            Entre com suas credenciais para acessar o painel administrativo.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6 pt-6">
           <form onSubmit={handleLogin} className="space-y-4">
-            <div className="space-y-2">
-              <Input
-                type="password"
-                placeholder="Digite a senha de acesso"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  setError(false);
-                }}
-                className={`bg-background/50 border-white/10 h-12 text-center text-lg tracking-widest ${
-                  error ? "border-red-500 ring-red-500/50" : ""
-                }`}
-              />
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Input
+                  type="email"
+                  placeholder="E-mail"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setError(false);
+                  }}
+                  className="bg-background/50 border-white/10 h-12"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Input
+                  type="password"
+                  placeholder="Senha"
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setError(false);
+                  }}
+                  className={`bg-background/50 border-white/10 h-12 ${
+                    error ? "border-red-500 ring-red-500/50" : ""
+                  }`}
+                  required
+                />
+              </div>
+
               {error && (
                 <p className="text-red-500 text-xs text-center font-medium animate-pulse">
-                  Senha incorreta. Tente "admin".
+                  Credenciais inválidas. Tente senha: "admin"
                 </p>
               )}
             </div>
+
             <Button
               type="submit"
-              className="w-full h-12 font-bold text-lg bg-primary hover:bg-primary/90"
+              disabled={isLoading}
+              className="w-full h-12 font-bold text-lg bg-primary hover:bg-primary/90 transition-all"
             >
-              ACESSAR <ArrowRight className="ml-2 w-5 h-5" />
+              {isLoading ? (
+                <span className="flex items-center gap-2">
+                  <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  CONECTANDO...
+                </span>
+              ) : (
+                <span className="flex items-center">
+                  ACESSAR <ArrowRight className="ml-2 w-5 h-5" />
+                </span>
+              )}
             </Button>
           </form>
 

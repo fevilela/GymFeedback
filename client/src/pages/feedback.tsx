@@ -27,7 +27,7 @@ import { useToast } from "@/hooks/use-toast";
 // Schema for validation
 const feedbackSchema = z.object({
   category: z.string().min(1, "Selecione uma categoria"),
-  personId: z.string().optional(),
+  personId: z.number().optional(),
   rating: z.number().min(1, "Selecione uma nota de 1 a 5"),
   message: z.string().optional(),
   userName: z.string().optional(),
@@ -55,7 +55,6 @@ export default function Feedback() {
     resolver: zodResolver(feedbackSchema),
     defaultValues: {
       category: "",
-      personId: "",
       rating: 0,
       message: "",
       userName: "",
@@ -89,10 +88,10 @@ export default function Feedback() {
     setValue("rating", value);
   };
 
-  const onSubmit = (data: FeedbackForm) => {
+  const onSubmit = async (data: FeedbackForm) => {
     console.log("Feedback submitted:", data);
 
-    const result = addFeedback({
+    const result = await addFeedback({
       category: data.category,
       personId: data.personId,
       personName: selectedPerson?.name,

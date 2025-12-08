@@ -78,7 +78,7 @@ export default function Collaborators() {
     roles,
   } = useStore();
   const [isOpen, setIsOpen] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const { toast } = useToast();
 
@@ -95,23 +95,31 @@ export default function Collaborators() {
 
   const currentImage = watch("image");
 
-  const onSubmit = (data: CollaboratorForm) => {
-    if (editingId) {
-      updateCollaborator(editingId, data);
+  const onSubmit = async (data: CollaboratorForm) => {
+    try {
+      if (editingId) {
+        await updateCollaborator(editingId, data);
+        toast({
+          title: "Colaborador atualizado!",
+          description: `Os dados de ${data.name} foram atualizados.`,
+        });
+      } else {
+        await addCollaborator(data);
+        toast({
+          title: "Colaborador cadastrado!",
+          description: `${data.name} foi adicionado à equipe.`,
+        });
+      }
+      setIsOpen(false);
+      reset();
+      setEditingId(null);
+    } catch (error) {
       toast({
-        title: "Colaborador atualizado!",
-        description: `Os dados de ${data.name} foram atualizados.`,
-      });
-    } else {
-      addCollaborator(data);
-      toast({
-        title: "Colaborador cadastrado!",
-        description: `${data.name} foi adicionado à equipe.`,
+        variant: "destructive",
+        title: "Erro",
+        description: "Não foi possível salvar os dados.",
       });
     }
-    setIsOpen(false);
-    reset();
-    setEditingId(null);
   };
 
   const handleEdit = (collab: any) => {
@@ -129,12 +137,20 @@ export default function Collaborators() {
     setIsOpen(true);
   };
 
-  const handleDelete = (id: string) => {
-    removeCollaborator(id);
-    toast({
-      title: "Colaborador removido",
-      description: "O colaborador foi removido da equipe com sucesso.",
-    });
+  const handleDelete = async (id: number) => {
+    try {
+      await removeCollaborator(id);
+      toast({
+        title: "Colaborador removido",
+        description: "O colaborador foi removido da equipe com sucesso.",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Erro",
+        description: "Não foi possível remover o colaborador.",
+      });
+    }
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
