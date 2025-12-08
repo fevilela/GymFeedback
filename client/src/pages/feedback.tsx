@@ -21,57 +21,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
 import logoImage from "@assets/399394586_722025015923170_6185085609781709026_n_1764870625217.jpg";
-
-// Import generated assets
-import receptionistFemale from "@assets/generated_images/professional_portrait_of_a_friendly_gym_receptionist,_female,_smiling,_uniform.png";
-import receptionistMale from "@assets/generated_images/professional_portrait_of_a_friendly_gym_receptionist,_male,_smiling,_uniform.png";
-import instructorMale from "@assets/generated_images/professional_portrait_of_a_fitness_instructor,_male,_muscular,_gym_background.png";
-import instructorFemale from "@assets/generated_images/professional_portrait_of_a_fitness_instructor,_female,_athletic,_gym_background.png";
-import { INITIAL_FEEDBACKS } from "@/data/mockData";
-
-// Mock Data for People
-const STAFF = {
-  reception: [
-    {
-      id: "rec-1",
-      name: "Ana Silva",
-      role: "Recepcionista",
-      image: receptionistFemale,
-    },
-    {
-      id: "rec-2",
-      name: "João Santos",
-      role: "Recepcionista",
-      image: receptionistMale,
-    },
-  ],
-  instructors: [
-    {
-      id: "inst-1",
-      name: "Carlos Oliveira",
-      role: "Musculação",
-      image: instructorMale,
-    },
-    {
-      id: "inst-2",
-      name: "Fernanda Lima",
-      role: "Fit Dance",
-      image: instructorFemale,
-    },
-    {
-      id: "inst-3",
-      name: "Pedro Souza",
-      role: "Funcional",
-      image: instructorMale,
-    }, // Reusing image for demo
-    {
-      id: "inst-4",
-      name: "Mariana Costa",
-      role: "Pilates",
-      image: instructorFemale,
-    }, // Reusing image for demo
-  ],
-};
+import { useStore } from "@/hooks/use-store";
 
 // Schema for validation
 const feedbackSchema = z.object({
@@ -85,6 +35,7 @@ const feedbackSchema = z.object({
 type FeedbackForm = z.infer<typeof feedbackSchema>;
 
 export default function Feedback() {
+  const { collaborators, addFeedback } = useStore();
   const [step, setStep] = useState<
     "category" | "person" | "rating" | "success"
   >("category");
@@ -114,7 +65,10 @@ export default function Feedback() {
     setSelectedCategory(category);
     setValue("category", category);
 
-    if (category === "Recepção" || category === "Professores") {
+    // Filter people based on category
+    const hasPeople = getPeopleList(category).length > 0;
+
+    if (hasPeople) {
       setStep("person");
     } else {
       setStep("rating");
@@ -134,26 +88,14 @@ export default function Feedback() {
   const onSubmit = (data: FeedbackForm) => {
     console.log("Feedback submitted:", data);
 
-    // Save to localStorage to simulate Google Sheets persistence
-    const newFeedback = {
-      id: Math.random().toString(36).substr(2, 9),
+    addFeedback({
       category: data.category,
       personId: data.personId,
       personName: selectedPerson?.name,
       rating: data.rating,
       message: data.message,
       userName: data.userName,
-      date: new Date().toISOString(),
-    };
-
-    const existingFeedbacks = JSON.parse(
-      localStorage.getItem("feedbacks") || JSON.stringify(INITIAL_FEEDBACKS)
-    );
-    const updatedFeedbacks = [...existingFeedbacks, newFeedback];
-    localStorage.setItem("feedbacks", JSON.stringify(updatedFeedbacks));
-
-    // Dispatch event so dashboard updates if open in another tab
-    window.dispatchEvent(new Event("storage"));
+    });
 
     setStep("success");
   };
@@ -161,10 +103,8 @@ export default function Feedback() {
   const handleBack = () => {
     if (step === "person") setStep("category");
     else if (step === "rating") {
-      if (
-        selectedCategory === "Recepção" ||
-        selectedCategory === "Professores"
-      ) {
+      const hasPeople = getPeopleList(selectedCategory).length > 0;
+      if (hasPeople) {
         setStep("person");
       } else {
         setStep("category");
@@ -174,9 +114,15 @@ export default function Feedback() {
     }
   };
 
-  const getPeopleList = () => {
-    if (selectedCategory === "Recepção") return STAFF.reception;
-    if (selectedCategory === "Professores") return STAFF.instructors;
+  const getPeopleList = (category: string = selectedCategory) => {
+    if (category === "Recepção") {
+      return collaborators.filter(
+        (c) => c.role === "Recepcionista" && c.active
+      );
+    }
+    if (category === "Professores") {
+      return collaborators.filter((c) => c.role === "Professor" && c.active);
+    }
     return [];
   };
 
@@ -212,7 +158,7 @@ export default function Feedback() {
         </Button>
       )}
 
-      <div className="w-full max-w-4xl z-10 relative pt-24 md:pt-0">
+      <div className="w-full max-w-4xl z-10 relative pt-32">
         <AnimatePresence mode="wait">
           {/* STEP 1: CATEGORY */}
           {step === "category" && (
@@ -294,18 +240,25 @@ export default function Feedback() {
                     className="relative group text-left"
                   >
                     <div className="aspect-3/2 rounded-xl overflow-hidden mb-3 border-2 border-transparent group-hover:border-primary transition-all relative">
-                      <img
-                        src={person.image}
-                        alt={person.name}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
+                      {person.image ? (
+                        <img
+                          src={person.image}
+                          alt={person.name}
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-muted flex items-center justify-center text-4xl font-bold text-muted-foreground">
+                          {person.name.charAt(0)}
+                        </div>
+                      )}
+
                       <div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent opacity-60" />
                       <div className="absolute bottom-0 left-0 p-4 w-full">
                         <p className="text-white font-bold text-lg truncate">
                           {person.name}
                         </p>
                         <p className="text-primary text-xs font-medium uppercase tracking-wider">
-                          {person.role}
+                          {person.role} - {person.unit}
                         </p>
                       </div>
                     </div>
@@ -337,11 +290,18 @@ export default function Feedback() {
                 <CardContent className="p-8 md:p-12">
                   {selectedPerson && (
                     <div className="flex items-center gap-4 mb-8 p-4 bg-background/50 rounded-xl border border-white/5">
-                      <img
-                        src={selectedPerson.image}
-                        alt={selectedPerson.name}
-                        className="w-16 h-16 rounded-full object-cover border-2 border-primary"
-                      />
+                      {selectedPerson.image ? (
+                        <img
+                          src={selectedPerson.image}
+                          alt={selectedPerson.name}
+                          className="w-16 h-16 rounded-full object-cover border-2 border-primary"
+                        />
+                      ) : (
+                        <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center text-xl font-bold border-2 border-primary">
+                          {selectedPerson.name.charAt(0)}
+                        </div>
+                      )}
+
                       <div>
                         <p className="text-sm text-muted-foreground uppercase tracking-wider">
                           Avaliando

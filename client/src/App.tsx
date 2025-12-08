@@ -7,6 +7,7 @@ import Home from "@/pages/home";
 import Feedback from "@/pages/feedback";
 import Dashboard from "@/pages/dashboard";
 import Login from "@/pages/login";
+import Collaborators from "@/pages/collaborators";
 import { useEffect } from "react";
 
 // Protected Route Component
@@ -39,6 +40,9 @@ function Router() {
       <Route path="/login" component={Login} />
       <Route path="/dashboard">
         <ProtectedRoute component={Dashboard} />
+      </Route>
+      <Route path="/collaborators">
+        <ProtectedRoute component={Collaborators} />
       </Route>
       <Route component={NotFound} />
     </Switch>

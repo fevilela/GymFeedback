@@ -20,9 +20,10 @@ import {
   TrendingUp,
   Users,
   MessageSquare,
-  Calendar as CalendarIcon,
   Filter,
   X,
+  Settings,
+  Building2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -40,13 +41,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { INITIAL_FEEDBACKS, FeedbackItem, CATEGORIES } from "@/data/mockData";
+import { CalendarDateRangePicker } from "@/components/ui/custom-calendar";
+import { CATEGORIES } from "@/data/mockData";
 import {
   format,
   isWithinInterval,
@@ -55,25 +51,17 @@ import {
   subDays,
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { cn } from "@/lib/utils";
-import { DateRange } from "react-day-picker";
+import { useStore } from "@/hooks/use-store";
 
-// Helper to get data from localStorage
-const getFeedbacks = (): FeedbackItem[] => {
-  const stored = localStorage.getItem("feedbacks");
-  if (stored) {
-    return JSON.parse(stored);
-  }
-  // Initialize with mock data if empty
-  localStorage.setItem("feedbacks", JSON.stringify(INITIAL_FEEDBACKS));
-  return INITIAL_FEEDBACKS;
-};
+// DateRange interface matching the custom calendar
+interface DateRange {
+  from: Date | undefined;
+  to: Date | undefined;
+}
 
 export default function Dashboard() {
-  const [allFeedbacks, setAllFeedbacks] = useState<FeedbackItem[]>([]);
-  const [filteredFeedbacks, setFilteredFeedbacks] = useState<FeedbackItem[]>(
-    []
-  );
+  const { feedbacks: allFeedbacks, collaborators, units } = useStore();
+  const [filteredFeedbacks, setFilteredFeedbacks] = useState(allFeedbacks);
 
   // Filters
   const [date, setDate] = useState<DateRange | undefined>({
@@ -81,19 +69,7 @@ export default function Dashboard() {
     to: new Date(),
   });
   const [selectedPerson, setSelectedPerson] = useState<string>("all");
-
-  useEffect(() => {
-    const loadData = () => {
-      const data = getFeedbacks();
-      setAllFeedbacks(data);
-    };
-
-    loadData();
-
-    const handleStorage = () => loadData();
-    window.addEventListener("storage", handleStorage);
-    return () => window.removeEventListener("storage", handleStorage);
-  }, []);
+  const [selectedUnit, setSelectedUnit] = useState<string>("all");
 
   // Apply filters
   useEffect(() => {
@@ -112,11 +88,25 @@ export default function Dashboard() {
 
     // Filter by Person
     if (selectedPerson && selectedPerson !== "all") {
-      result = result.filter((item) => item.personName === selectedPerson);
+      result = result.filter((item) => item.personId === selectedPerson);
+    }
+
+    // Filter by Unit
+    if (selectedUnit && selectedUnit !== "all") {
+      // If feedback has explicit unit, use it.
+      // Otherwise try to find unit via personId if available.
+      result = result.filter((item) => {
+        if (item.unit) return item.unit === selectedUnit;
+        if (item.personId) {
+          const person = collaborators.find((c) => c.id === item.personId);
+          return person?.unit === selectedUnit;
+        }
+        return false; // No unit info, filter out
+      });
     }
 
     setFilteredFeedbacks(result);
-  }, [allFeedbacks, date, selectedPerson]);
+  }, [allFeedbacks, date, selectedPerson, selectedUnit, collaborators]);
 
   // METRICS CALCULATION (using filtered data)
   const totalFeedbacks = filteredFeedbacks.length;
@@ -154,7 +144,7 @@ export default function Dashboard() {
       count: catFeedbacks.length,
       color: cat.color,
     };
-  }).filter((d) => d.count > 0); // Only show categories with data
+  }).filter((d) => d.count > 0);
 
   // 2. Rating Distribution
   const ratingDistribution = [5, 4, 3, 2, 1].map((star) => ({
@@ -163,22 +153,30 @@ export default function Dashboard() {
     star: star,
   }));
 
-  // 3. Top Staff (Calculate from ALL feedbacks to show global ranking, or filtered? Usually filtered is better for "performance in period")
+  // 3. Top Staff
   const staffMap = new Map<
     string,
-    { name: string; total: number; count: number }
+    { name: string; total: number; count: number; image?: string }
   >();
+
   filteredFeedbacks.forEach((f) => {
-    if (f.personName) {
-      const current = staffMap.get(f.personName) || {
-        name: f.personName,
+    if (f.personId) {
+      const person = collaborators.find((c) => c.id === f.personId);
+      const personName = person?.name || f.personName || "Desconhecido";
+      const personImage = person?.image;
+
+      const current = staffMap.get(f.personId) || {
+        name: personName,
         total: 0,
         count: 0,
+        image: personImage,
       };
-      staffMap.set(f.personName, {
-        name: f.personName,
+
+      staffMap.set(f.personId, {
+        name: personName,
         total: current.total + f.rating,
         count: current.count + 1,
+        image: personImage,
       });
     }
   });
@@ -187,11 +185,6 @@ export default function Dashboard() {
     .map((s) => ({ ...s, average: s.total / s.count }))
     .sort((a, b) => b.average - a.average)
     .slice(0, 3);
-
-  // Get unique people for filter
-  const uniquePeople = Array.from(
-    new Set(allFeedbacks.map((f) => f.personName).filter(Boolean))
-  ) as string[];
 
   return (
     <div className="min-h-screen bg-background text-foreground p-4 md:p-8 pb-20">
@@ -207,8 +200,13 @@ export default function Dashboard() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Link href="/">
+          <Link href="/collaborators">
             <Button variant="outline" className="gap-2">
+              <Settings className="w-4 h-4" /> Gerenciar Equipe
+            </Button>
+          </Link>
+          <Link href="/">
+            <Button variant="default" className="gap-2">
               <ArrowLeft className="w-4 h-4" /> Voltar para Início
             </Button>
           </Link>
@@ -216,93 +214,57 @@ export default function Dashboard() {
       </div>
 
       <div className="max-w-7xl mx-auto space-y-8">
-        {/* Filters Section */}
-        <div className="flex flex-col md:flex-row gap-4 items-end bg-card/50 backdrop-blur-sm border border-white/10 p-6 rounded-xl">
-          <div className="grid gap-2">
-            <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <CalendarIcon className="w-4 h-4" /> Período
-            </label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  id="date"
-                  variant={"outline"}
-                  className={cn(
-                    "w-[300px] justify-start text-left font-normal bg-background/50 border-white/10 hover:bg-white/5 hover:text-white transition-all",
-                    !date && "text-muted-foreground"
-                  )}
-                >
-                  {date?.from ? (
-                    date.to ? (
-                      <>
-                        {format(date.from, "dd/MM/yyyy")} -{" "}
-                        {format(date.to, "dd/MM/yyyy")}
-                      </>
-                    ) : (
-                      format(date.from, "dd/MM/yyyy")
-                    )
-                  ) : (
-                    <span>Selecione um período</span>
-                  )}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent
-                className="w-auto p-0 bg-zinc-950 border-zinc-800 shadow-2xl rounded-xl overflow-hidden"
-                align="start"
-              >
-                <Calendar
-                  initialFocus
-                  mode="range"
-                  defaultMonth={date?.from}
-                  selected={date}
-                  onSelect={setDate}
-                  numberOfMonths={2}
-                  className="bg-zinc-950 text-white p-4"
-                />
-              </PopoverContent>
-            </Popover>
+        {/* Filters Bar */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 bg-card/50 p-4 rounded-xl border border-white/5 backdrop-blur-sm">
+          <div className="flex items-center gap-2 md:col-span-1">
+            <Filter className="w-5 h-5 text-primary" />
+            <span className="font-bold text-sm uppercase tracking-wider text-muted-foreground">
+              Filtros
+            </span>
           </div>
 
-          {/* Person Filter */}
-          <div className="w-[250px] grid gap-2">
-            <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <Users className="w-4 h-4" /> Colaborador
-            </label>
+          {/* Custom Calendar */}
+          <div className="md:col-span-1">
+            <CalendarDateRangePicker
+              date={date}
+              setDate={setDate}
+              className="w-full"
+            />
+          </div>
+
+          {/* Collaborator Filter */}
+          <div className="md:col-span-1">
             <Select value={selectedPerson} onValueChange={setSelectedPerson}>
-              <SelectTrigger className="bg-background/50 border-white/10 hover:bg-white/5 transition-all">
-                <SelectValue placeholder="Filtrar por Colaborador" />
+              <SelectTrigger className="w-full bg-card/50 border-white/10">
+                <SelectValue placeholder="Todos os Colaboradores" />
               </SelectTrigger>
-              <SelectContent className="bg-zinc-950 border-zinc-800 text-white">
-                <SelectItem
-                  value="all"
-                  className="focus:bg-zinc-800 focus:text-white cursor-pointer"
-                >
-                  Todos os Colaboradores
-                </SelectItem>
-                {uniquePeople.map((person) => (
-                  <SelectItem
-                    key={person}
-                    value={person}
-                    className="focus:bg-zinc-800 focus:text-white cursor-pointer"
-                  >
-                    {person}
+              <SelectContent>
+                <SelectItem value="all">Todos os Colaboradores</SelectItem>
+                {collaborators.map((c) => (
+                  <SelectItem key={c.id} value={c.id}>
+                    {c.name}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
 
-          {/* Clear Filters */}
-          <Button
-            variant="ghost"
-            onClick={() => {
-              setDate({ from: subDays(new Date(), 30), to: new Date() });
-              setSelectedPerson("all");
-            }}
-            className="text-muted-foreground hover:text-white hover:bg-white/5 mb-px"
-          >
-            <X className="w-4 h-4 mr-2" /> Limpar Filtros
-          </Button>
+          {/* Unit Filter */}
+          <div className="md:col-span-1">
+            <Select value={selectedUnit} onValueChange={setSelectedUnit}>
+              <SelectTrigger className="w-full bg-card/50 border-white/10">
+                <SelectValue placeholder="Todas as Unidades" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas as Unidades</SelectItem>
+                {units.map((u) => (
+                  <SelectItem key={u} value={u}>
+                    {u}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         {/* KPI Cards */}
@@ -471,15 +433,23 @@ export default function Dashboard() {
                   <div key={idx} className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div
-                        className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${
+                        className={`w-10 h-10 rounded-full flex items-center justify-center font-bold overflow-hidden border-2 ${
                           idx === 0
-                            ? "bg-yellow-500/20 text-yellow-500"
+                            ? "border-yellow-500/50"
                             : idx === 1
-                            ? "bg-gray-400/20 text-gray-400"
-                            : "bg-orange-700/20 text-orange-700"
+                            ? "border-gray-400/50"
+                            : "border-orange-700/50"
                         }`}
                       >
-                        {idx + 1}
+                        {staff.image ? (
+                          <img
+                            src={staff.image}
+                            alt={staff.name}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <span className="text-xs">{idx + 1}</span>
+                        )}
                       </div>
                       <div>
                         <p className="font-medium text-white">{staff.name}</p>
@@ -509,7 +479,7 @@ export default function Dashboard() {
           <Card className="bg-card/50 backdrop-blur-sm border-white/10 lg:col-span-2">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <CalendarIcon className="w-5 h-5 text-primary" /> Feedbacks
+                <MessageSquare className="w-5 h-5 text-primary" /> Feedbacks
                 Recentes
               </CardTitle>
               <CardDescription>Últimos comentários enviados</CardDescription>
@@ -528,13 +498,18 @@ export default function Dashboard() {
                         >
                           <div className="flex justify-between items-start mb-2">
                             <div className="flex items-center gap-2">
-                              <span className="font-bold text-sm px-2 py-1 rounded bg-primary/20 text-primary-foreground">
+                              <span className="font-bold text-xs px-2 py-1 rounded bg-primary/20 text-primary-foreground">
                                 {item.category}
                               </span>
                               {item.personName && (
-                                <span className="text-sm text-muted-foreground flex items-center gap-1">
-                                  <span className="w-1 h-1 rounded-full bg-muted-foreground" />
+                                <span className="text-xs text-muted-foreground flex items-center gap-1 border-l border-white/10 pl-2">
                                   {item.personName}
+                                </span>
+                              )}
+                              {item.unit && (
+                                <span className="text-xs text-muted-foreground flex items-center gap-1 border-l border-white/10 pl-2">
+                                  <Building2 className="w-3 h-3" />
+                                  {item.unit}
                                 </span>
                               )}
                             </div>
