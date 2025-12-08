@@ -22,6 +22,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
 import logoImage from "@assets/399394586_722025015923170_6185085609781709026_n_1764870625217.jpg";
 import { useStore } from "@/hooks/use-store";
+import { useToast } from "@/hooks/use-toast";
 
 // Schema for validation
 const feedbackSchema = z.object({
@@ -30,12 +31,14 @@ const feedbackSchema = z.object({
   rating: z.number().min(1, "Selecione uma nota de 1 a 5"),
   message: z.string().optional(),
   userName: z.string().optional(),
+  userEmail: z.string().email("Insira um e-mail válido"),
 });
 
 type FeedbackForm = z.infer<typeof feedbackSchema>;
 
 export default function Feedback() {
   const { collaborators, addFeedback } = useStore();
+  const { toast } = useToast();
   const [step, setStep] = useState<
     "category" | "person" | "rating" | "success"
   >("category");
@@ -56,6 +59,7 @@ export default function Feedback() {
       rating: 0,
       message: "",
       userName: "",
+      userEmail: "",
     },
   });
 
@@ -88,14 +92,24 @@ export default function Feedback() {
   const onSubmit = (data: FeedbackForm) => {
     console.log("Feedback submitted:", data);
 
-    addFeedback({
+    const result = addFeedback({
       category: data.category,
       personId: data.personId,
       personName: selectedPerson?.name,
       rating: data.rating,
       message: data.message,
       userName: data.userName,
+      userEmail: data.userEmail,
     });
+
+    if (result && !result.success) {
+      toast({
+        variant: "destructive",
+        title: "Erro ao enviar avaliação",
+        description: result.message,
+      });
+      return;
+    }
 
     setStep("success");
   };
@@ -239,7 +253,7 @@ export default function Feedback() {
                     onClick={() => handlePersonSelect(person)}
                     className="relative group text-left"
                   >
-                    <div className="aspect-3/2 rounded-xl overflow-hidden mb-3 border-2 border-transparent group-hover:border-primary transition-all relative">
+                    <div className="aspect-3/3 rounded-xl overflow-hidden mb-3 border-2 border-transparent group-hover:border-primary transition-all relative">
                       {person.image ? (
                         <img
                           src={person.image}
@@ -382,6 +396,23 @@ export default function Feedback() {
                       />
                     </div>
 
+                    <div className="space-y-4">
+                      <label className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
+                        Seu E-mail (Obrigatório)
+                      </label>
+                      <Input
+                        {...register("userEmail")}
+                        type="email"
+                        placeholder="Ex: joao@email.com"
+                        className="bg-background/50 border-input h-12 text-lg focus:border-primary/50 transition-colors"
+                      />
+                      {errors.userEmail && (
+                        <p className="text-destructive text-sm">
+                          {errors.userEmail.message}
+                        </p>
+                      )}
+                    </div>
+
                     <Button
                       type="submit"
                       size="lg"
@@ -421,6 +452,7 @@ export default function Feedback() {
                   setValue("rating", 0);
                   setValue("message", "");
                   setValue("userName", "");
+                  setValue("userEmail", "");
                   setSelectedCategory("");
                   setSelectedPerson(null);
                 }}

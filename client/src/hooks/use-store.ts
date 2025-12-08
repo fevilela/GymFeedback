@@ -19,42 +19,14 @@ export interface FeedbackItem {
   rating: number;
   message?: string;
   userName?: string;
+  userEmail?: string;
   date: string;
   unit?: string; // Added unit to feedback
 }
 
-// Initial Mock Data for Collaborators
-export const INITIAL_COLLABORATORS: Collaborator[] = [
-  {
-    id: "rec-1",
-    name: "Ana Silva",
-    role: "Recepcionista",
-    unit: "Unidade Centro",
-    active: true,
-    image:
-      "/attached_assets/generated_images/professional_portrait_of_a_friendly_gym_receptionist,_female,_smiling,_uniform.png",
-  },
-  {
-    id: "inst-1",
-    name: "Carlos Oliveira",
-    role: "Professor",
-    unit: "Unidade Centro",
-    active: true,
-    image:
-      "/attached_assets/generated_images/professional_portrait_of_a_fitness_instructor,_male,_muscular,_gym_background.png",
-  },
-  {
-    id: "inst-2",
-    name: "Fernanda Lima",
-    role: "Professor",
-    unit: "Unidade Sul",
-    active: true,
-    image:
-      "/attached_assets/generated_images/professional_portrait_of_a_fitness_instructor,_female,_athletic,_gym_background.png",
-  },
-];
+export const INITIAL_COLLABORATORS: Collaborator[] = [];
 
-export const UNITS = ["Unidade Centro", "Unidade Sul", "Unidade Norte"];
+export const UNITS = ["Unidade Centro", "Unidade Perimetral"];
 export const ROLES = ["Recepcionista", "Professor", "Limpeza", "Gerente"];
 
 // Hook
@@ -115,6 +87,27 @@ export function useStore() {
   };
 
   const addFeedback = (feedback: Omit<FeedbackItem, "id" | "date">) => {
+    // Check for existing feedback from same email for same person within 7 days
+    if (feedback.personId && feedback.userEmail) {
+      const oneWeekAgo = new Date();
+      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+      const existingFeedback = feedbacks.find((f) => {
+        return (
+          f.personId === feedback.personId &&
+          f.userEmail === feedback.userEmail &&
+          new Date(f.date) > oneWeekAgo
+        );
+      });
+
+      if (existingFeedback) {
+        return {
+          success: false,
+          message: "Você já avaliou este profissional nesta semana.",
+        };
+      }
+    }
+
     const newFeedback: FeedbackItem = {
       ...feedback,
       id: Math.random().toString(36).substr(2, 9),
@@ -133,6 +126,27 @@ export function useStore() {
     setFeedbacks(updated);
     localStorage.setItem("feedbacks", JSON.stringify(updated));
     window.dispatchEvent(new Event("storage"));
+
+    return { success: true };
+  };
+
+  const updateCollaborator = (
+    id: string,
+    updates: Partial<Omit<Collaborator, "id">>
+  ) => {
+    const updated = collaborators.map((c) =>
+      c.id === id ? { ...c, ...updates } : c
+    );
+    setCollaborators(updated);
+    localStorage.setItem("collaborators", JSON.stringify(updated));
+    window.dispatchEvent(new Event("storage"));
+  };
+
+  const removeCollaborator = (id: string) => {
+    const updated = collaborators.filter((c) => c.id !== id);
+    setCollaborators(updated);
+    localStorage.setItem("collaborators", JSON.stringify(updated));
+    window.dispatchEvent(new Event("storage"));
   };
 
   return {
@@ -141,6 +155,8 @@ export function useStore() {
     units,
     roles,
     addCollaborator,
+    updateCollaborator,
+    removeCollaborator,
     addFeedback,
   };
 }

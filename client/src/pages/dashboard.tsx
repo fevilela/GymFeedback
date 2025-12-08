@@ -162,28 +162,39 @@ export default function Dashboard() {
   filteredFeedbacks.forEach((f) => {
     if (f.personId) {
       const person = collaborators.find((c) => c.id === f.personId);
-      const personName = person?.name || f.personName || "Desconhecido";
-      const personImage = person?.image;
 
-      const current = staffMap.get(f.personId) || {
-        name: personName,
-        total: 0,
-        count: 0,
-        image: personImage,
-      };
+      // Only include if person exists in the current collaborators list
+      if (person) {
+        const personName = person.name;
+        const personImage = person.image;
 
-      staffMap.set(f.personId, {
-        name: personName,
-        total: current.total + f.rating,
-        count: current.count + 1,
-        image: personImage,
-      });
+        const current = staffMap.get(f.personId) || {
+          name: personName,
+          total: 0,
+          count: 0,
+          image: personImage,
+        };
+
+        staffMap.set(f.personId, {
+          name: personName,
+          total: current.total + f.rating,
+          count: current.count + 1,
+          image: personImage,
+        });
+      }
     }
   });
 
   const topStaff = Array.from(staffMap.values())
     .map((s) => ({ ...s, average: s.total / s.count }))
-    .sort((a, b) => b.average - a.average)
+    .sort((a, b) => {
+      // Primary sort: Average rating (descending)
+      if (b.average !== a.average) {
+        return b.average - a.average;
+      }
+      // Secondary sort: Number of evaluations (descending) - Tie breaker
+      return b.count - a.count;
+    })
     .slice(0, 3);
 
   return (

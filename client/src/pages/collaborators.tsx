@@ -18,6 +18,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -29,7 +40,14 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { useStore, ROLES, UNITS } from "@/hooks/use-store";
-import { Plus, Search, Trash2, Edit2, ArrowLeft } from "lucide-react";
+import {
+  Plus,
+  Search,
+  Trash2,
+  Edit2,
+  ArrowLeft,
+  UserCircle,
+} from "lucide-react";
 import { Link } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -51,8 +69,16 @@ const collaboratorSchema = z.object({
 type CollaboratorForm = z.infer<typeof collaboratorSchema>;
 
 export default function Collaborators() {
-  const { collaborators, addCollaborator, units, roles } = useStore();
+  const {
+    collaborators,
+    addCollaborator,
+    updateCollaborator,
+    removeCollaborator,
+    units,
+    roles,
+  } = useStore();
   const [isOpen, setIsOpen] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const { toast } = useToast();
 
@@ -60,20 +86,66 @@ export default function Collaborators() {
     register,
     handleSubmit,
     setValue,
+    watch,
     reset,
     formState: { errors },
   } = useForm<CollaboratorForm>({
     resolver: zodResolver(collaboratorSchema),
   });
 
+  const currentImage = watch("image");
+
   const onSubmit = (data: CollaboratorForm) => {
-    addCollaborator(data);
+    if (editingId) {
+      updateCollaborator(editingId, data);
+      toast({
+        title: "Colaborador atualizado!",
+        description: `Os dados de ${data.name} foram atualizados.`,
+      });
+    } else {
+      addCollaborator(data);
+      toast({
+        title: "Colaborador cadastrado!",
+        description: `${data.name} foi adicionado à equipe.`,
+      });
+    }
     setIsOpen(false);
     reset();
+    setEditingId(null);
+  };
+
+  const handleEdit = (collab: any) => {
+    setEditingId(collab.id);
+    setValue("name", collab.name);
+    setValue("role", collab.role);
+    setValue("unit", collab.unit);
+    setValue("image", collab.image);
+    setIsOpen(true);
+  };
+
+  const handleNew = () => {
+    setEditingId(null);
+    reset();
+    setIsOpen(true);
+  };
+
+  const handleDelete = (id: string) => {
+    removeCollaborator(id);
     toast({
-      title: "Colaborador cadastrado!",
-      description: `${data.name} foi adicionado à equipe.`,
+      title: "Colaborador removido",
+      description: "O colaborador foi removido da equipe com sucesso.",
     });
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setValue("image", reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const filteredCollaborators = collaborators.filter((c) =>
@@ -99,24 +171,75 @@ export default function Collaborators() {
                 <ArrowLeft className="w-4 h-4" /> Voltar ao Dashboard
               </Button>
             </Link>
-            <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <Dialog
+              open={isOpen}
+              onOpenChange={(open) => {
+                setIsOpen(open);
+                if (!open) {
+                  setEditingId(null);
+                  reset();
+                }
+              }}
+            >
               <DialogTrigger asChild>
-                <Button className="gap-2">
+                <Button className="gap-2" onClick={handleNew}>
                   <Plus className="w-4 h-4" /> Novo Colaborador
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                  <DialogTitle>Novo Colaborador</DialogTitle>
+                  <DialogTitle>
+                    {editingId ? "Editar Colaborador" : "Novo Colaborador"}
+                  </DialogTitle>
                   <DialogDescription>
-                    Preencha os dados abaixo para adicionar um novo membro à
-                    equipe.
+                    {editingId
+                      ? "Atualize os dados do colaborador."
+                      : "Preencha os dados abaixo para adicionar um novo membro à equipe."}
                   </DialogDescription>
                 </DialogHeader>
                 <form
                   onSubmit={handleSubmit(onSubmit)}
                   className="space-y-4 py-4"
                 >
+                  <div className="flex flex-col items-center gap-4 mb-4">
+                    <div className="w-24 h-24 rounded-full overflow-hidden bg-muted border-2 border-border relative group">
+                      {currentImage ? (
+                        <img
+                          src={currentImage}
+                          alt="Preview"
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                          <UserCircle className="w-12 h-12" />
+                        </div>
+                      )}
+                      <label
+                        htmlFor="image-upload"
+                        className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer text-white text-xs font-medium"
+                      >
+                        Alterar Foto
+                      </label>
+                    </div>
+                    <Input
+                      id="image-upload"
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleImageUpload}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        document.getElementById("image-upload")?.click()
+                      }
+                    >
+                      Carregar Foto
+                    </Button>
+                  </div>
+
                   <div className="space-y-2">
                     <Label htmlFor="name">Nome Completo</Label>
                     <Input
@@ -133,7 +256,10 @@ export default function Collaborators() {
 
                   <div className="space-y-2">
                     <Label htmlFor="role">Cargo</Label>
-                    <Select onValueChange={(val) => setValue("role", val)}>
+                    <Select
+                      onValueChange={(val) => setValue("role", val)}
+                      value={watch("role")}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Selecione um cargo" />
                       </SelectTrigger>
@@ -154,7 +280,10 @@ export default function Collaborators() {
 
                   <div className="space-y-2">
                     <Label htmlFor="unit">Unidade</Label>
-                    <Select onValueChange={(val) => setValue("unit", val)}>
+                    <Select
+                      onValueChange={(val) => setValue("unit", val)}
+                      value={watch("unit")}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Selecione uma unidade" />
                       </SelectTrigger>
@@ -176,7 +305,9 @@ export default function Collaborators() {
                   {/* Image URL optional - for now hidden/auto-generated in store */}
 
                   <div className="flex justify-end pt-4">
-                    <Button type="submit">Cadastrar</Button>
+                    <Button type="submit">
+                      {editingId ? "Salvar Alterações" : "Cadastrar"}
+                    </Button>
                   </div>
                 </form>
               </DialogContent>
@@ -254,10 +385,40 @@ export default function Collaborators() {
                           variant="ghost"
                           size="icon"
                           className="h-8 w-8 text-muted-foreground hover:text-white"
+                          onClick={() => handleEdit(collab)}
                         >
                           <Edit2 className="w-4 h-4" />
                         </Button>
-                        {/* Delete functionality not requested but UI placeholder */}
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Tem certeza?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Esta ação não pode ser desfeita. Isso excluirá
+                                permanentemente o colaborador
+                                {collab.name} do sistema.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => handleDelete(collab.id)}
+                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                              >
+                                Excluir
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </div>
                     </TableCell>
                   </TableRow>
