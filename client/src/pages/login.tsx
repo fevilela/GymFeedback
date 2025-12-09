@@ -11,7 +11,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { apiRequest } from "@/lib/queryClient";
-import logoImage from "@assets/399394586_722025015923170_6185085609781709026_n_1764870625217.jpg";
+import logoImage from "@assets/logo.jpg";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -72,8 +72,8 @@ export default function Login() {
             <div className="space-y-4">
               <div className="space-y-2">
                 <Input
-                  type="email"
-                  placeholder="E-mail"
+                  type="text"
+                  placeholder="Usuário"
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
@@ -101,7 +101,7 @@ export default function Login() {
 
               {error && (
                 <p className="text-red-500 text-xs text-center font-medium animate-pulse">
-                  Credenciais inválidas. Tente senha: "admin"
+                  Credenciais inválidas. Tente usuário: "admin" e senha: "admin"
                 </p>
               )}
             </div>

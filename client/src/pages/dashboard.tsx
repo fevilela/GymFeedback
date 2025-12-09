@@ -248,7 +248,7 @@ export default function Dashboard() {
           {/* Collaborator Filter */}
           <div className="md:col-span-1">
             <Select value={selectedPerson} onValueChange={setSelectedPerson}>
-              <SelectTrigger className="w-full bg-card/50 border-white/10">
+              <SelectTrigger className="w-full bg-card border-white/10">
                 <SelectValue placeholder="Todos os Colaboradores" />
               </SelectTrigger>
               <SelectContent>
@@ -265,7 +265,7 @@ export default function Dashboard() {
           {/* Unit Filter */}
           <div className="md:col-span-1">
             <Select value={selectedUnit} onValueChange={setSelectedUnit}>
-              <SelectTrigger className="w-full bg-card/50 border-white/10">
+              <SelectTrigger className="w-full bg-card border-white/10">
                 <SelectValue placeholder="Todas as Unidades" />
               </SelectTrigger>
               <SelectContent>

@@ -10,12 +10,14 @@ import {
 export const UNITS = ["Unidade Centro", "Unidade Perimetral"];
 export const ROLES = ["Recepcionista", "Professor", "Limpeza", "Gerente"];
 
+const EMPTY_ARRAY: any[] = [];
+
 export function useStore() {
-  const { data: collaborators = [] } = useQuery<Collaborator[]>({
+  const { data: collaborators = EMPTY_ARRAY } = useQuery<Collaborator[]>({
     queryKey: ["/api/collaborators"],
   });
 
-  const { data: feedbacks = [] } = useQuery<Feedback[]>({
+  const { data: feedbacks = EMPTY_ARRAY } = useQuery<Feedback[]>({
     queryKey: ["/api/feedbacks"],
   });
 

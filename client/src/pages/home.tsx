@@ -31,10 +31,10 @@ import {
 // Import generated assets
 import heroImage from "@assets/gym-hero.jpg";
 import runnerImage from "@assets/generated_images/athletic_person_running_with_motion_blur.png";
-import logoImage from "@assets/399394586_722025015923170_6185085609781709026_n_1764870625217.jpg";
+import logoImage from "@assets/logo.jpg";
 
 import unit1Image from "@assets/generated_images/modern_gym_exterior_on_a_city_street_day_time.png";
-import unit2Image from "@assets/generated_images/modern_gym_exterior_on_a_wide_avenue_day_time.png";
+import unit2Image from "@assets/generated_images/unidade2.png";
 
 import sandCourtImage from "@assets/generated_images/outdoor_sand_court_for_beach_tennis_or_volleyball.png";
 import danceClassImage from "@assets/generated_images/group_dance_class_in_a_gym_studio.png";
@@ -176,13 +176,6 @@ export default function Home() {
                   className="bg-primary text-white hover:bg-primary/90 text-lg px-8 h-14 font-bold border-0"
                 >
                   COMEÇAR AGORA <ChevronRight className="ml-2" />
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-white/20 hover:bg-white/10 text-lg px-8 h-14"
-                >
-                  CONHECER A ACADEMIA
                 </Button>
               </motion.div>
             </motion.div>

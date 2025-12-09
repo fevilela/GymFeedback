@@ -20,7 +20,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
-import logoImage from "@assets/399394586_722025015923170_6185085609781709026_n_1764870625217.jpg";
+import logoImage from "@assets/logo.jpg";
 import { useStore } from "@/hooks/use-store";
 import { useToast } from "@/hooks/use-toast";
 
