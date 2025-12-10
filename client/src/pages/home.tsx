@@ -17,6 +17,7 @@ import {
   ShowerHead,
   Armchair,
   Car,
+  Menu,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -27,11 +28,17 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetTitle,
+} from "@/components/ui/sheet";
 
 // Import generated assets
 import heroImage from "@assets/gym-hero.jpg";
 import runnerImage from "@assets/generated_images/athletic_person_running_with_motion_blur.png";
-import logoImage from "@assets/logo.png";
+import logoImage from "@assets/logo.jpg";
 
 import unit1Image from "@assets/generated_images/modern_gym_exterior_on_a_city_street_day_time.png";
 import unit2Image from "@assets/generated_images/unidade2.png";
@@ -91,25 +98,95 @@ export default function Home() {
       {/* Navigation */}
       <header className="fixed top-0 w-full z-50 bg-background/90 backdrop-blur-lg border-b border-white/10 h-32">
         <div className="container mx-auto px-4 h-full flex items-center justify-between">
+          {/* Mobile Menu Trigger */}
+          <div className="md:hidden flex items-center">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="text-white">
+                  <Menu className="h-8 w-8" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent
+                side="left"
+                className="bg-background/95 border-r border-white/10"
+              >
+                <SheetTitle className="sr-only">Menu de Navegação</SheetTitle>
+                <div className="flex flex-col gap-8 mt-10">
+                  <a
+                    href="#modalidades"
+                    onClick={(e) => handleScrollTo(e, "modalidades")}
+                    className="text-xl font-medium hover:text-primary transition-colors"
+                  >
+                    MODALIDADES
+                  </a>
+                  <a
+                    href="#planos"
+                    onClick={(e) => handleScrollTo(e, "planos")}
+                    className="text-xl font-medium hover:text-primary transition-colors"
+                  >
+                    PLANOS
+                  </a>
+                  <a
+                    href="#unidades"
+                    onClick={(e) => handleScrollTo(e, "unidades")}
+                    className="text-xl font-medium hover:text-primary transition-colors"
+                  >
+                    UNIDADES
+                  </a>
+                  <div className="flex flex-col gap-4 mt-4">
+                    <Link href="/dashboard">
+                      <Button
+                        variant="ghost"
+                        className="text-muted-foreground hover:text-primary w-full justify-start font-bold uppercase tracking-wider px-0"
+                      >
+                        Área do Gestor
+                      </Button>
+                    </Link>
+                    <Link href="/feedback">
+                      <Button
+                        variant="outline"
+                        className="border-primary text-primary hover:bg-primary hover:text-primary-foreground w-full font-bold"
+                      >
+                        <Star className="w-4 h-4 mr-2" />
+                        AVALIAR
+                      </Button>
+                    </Link>
+                    <Button
+                      onClick={() =>
+                        window.open(
+                          "https://api.whatsapp.com/send/?phone=5535999384418&text=Ol%C3%A1%2C%20vim%20pelo%20site%20da%20academia%20e%20gostaria%20de%20fazer%20a%20minha%20matricula!",
+                          "_blank"
+                        )
+                      }
+                      className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold w-full"
+                    >
+                      MATRICULE-SE
+                    </Button>
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
+
           <nav className="hidden md:flex items-center gap-8 flex-1">
             <a
               href="#modalidades"
               onClick={(e) => handleScrollTo(e, "modalidades")}
-              className="text-sm font-medium hover:text-primary transition-colors"
+              className="text-base font-medium hover:text-primary transition-colors"
             >
               MODALIDADES
             </a>
             <a
               href="#planos"
               onClick={(e) => handleScrollTo(e, "planos")}
-              className="text-sm font-medium hover:text-primary transition-colors"
+              className="text-base font-medium hover:text-primary transition-colors"
             >
               PLANOS
             </a>
             <a
               href="#unidades"
               onClick={(e) => handleScrollTo(e, "unidades")}
-              className="text-sm font-medium hover:text-primary transition-colors"
+              className="text-base font-medium hover:text-primary transition-colors"
             >
               UNIDADES
             </a>
@@ -123,7 +200,7 @@ export default function Home() {
               <img
                 src={logoImage}
                 alt="Saúde Fit Logo"
-                className="h-20 w-auto object-contain rounded-md drop-shadow-lg"
+                className="h-28 w-auto object-contain rounded-xl drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
               />
             </motion.div>
           </div>
