@@ -38,7 +38,7 @@ import {
 // Import generated assets
 import heroImage from "@assets/gym-hero.jpg";
 import runnerImage from "@assets/generated_images/athletic_person_running_with_motion_blur.png";
-import logoImage from "@assets/logo.jpg";
+import logoImage from "@assets/logo.png";
 
 import unit1Image from "@assets/generated_images/modern_gym_exterior_on_a_city_street_day_time.png";
 import unit2Image from "@assets/generated_images/unidade2.png";
@@ -99,11 +99,15 @@ export default function Home() {
       <header className="fixed top-0 w-full z-50 bg-background/90 backdrop-blur-lg border-b border-white/10 h-32">
         <div className="container mx-auto px-4 h-full flex items-center justify-between">
           {/* Mobile Menu Trigger */}
-          <div className="md:hidden flex items-center">
+          <div className="md:hidden flex items-center z-50">
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-white">
-                  <Menu className="h-8 w-8" />
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="bg-transparent border-white/20 text-white hover:bg-white/10 hover:text-white"
+                >
+                  <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
               <SheetContent
