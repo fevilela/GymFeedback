@@ -11,7 +11,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { apiRequest } from "@/lib/queryClient";
-import logoImage from "@assets/logo.jpg";
+import logoImage from "@assets/logo.png";
 
 export default function Login() {
   const [email, setEmail] = useState("");

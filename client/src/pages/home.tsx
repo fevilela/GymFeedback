@@ -31,7 +31,7 @@ import {
 // Import generated assets
 import heroImage from "@assets/gym-hero.jpg";
 import runnerImage from "@assets/generated_images/athletic_person_running_with_motion_blur.png";
-import logoImage from "@assets/logo.jpg";
+import logoImage from "@assets/logo.png";
 
 import unit1Image from "@assets/generated_images/modern_gym_exterior_on_a_city_street_day_time.png";
 import unit2Image from "@assets/generated_images/unidade2.png";
@@ -89,7 +89,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Navigation */}
-      <header className="fixed top-0 w-full z-50 bg-background/90 backdrop-blur-lg border-b border-white/10 h-24">
+      <header className="fixed top-0 w-full z-50 bg-background/90 backdrop-blur-lg border-b border-white/10 h-32">
         <div className="container mx-auto px-4 h-full flex items-center justify-between">
           <nav className="hidden md:flex items-center gap-8 flex-1">
             <a
