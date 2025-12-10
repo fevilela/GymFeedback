@@ -9,6 +9,7 @@ import Dashboard from "@/pages/dashboard";
 import Login from "@/pages/login";
 import Collaborators from "@/pages/collaborators";
 import { useEffect } from "react";
+import { ReactLenis } from "@/components/lenis";
 
 // Protected Route Component
 function ProtectedRoute({
@@ -51,10 +52,22 @@ function Router() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <Toaster />
-      <Router />
-    </QueryClientProvider>
+    <ReactLenis
+      root
+      options={{
+        duration: 1.2,
+        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: "vertical",
+        gestureOrientation: "vertical",
+        smoothWheel: true,
+        touchMultiplier: 2,
+      }}
+    >
+      <QueryClientProvider client={queryClient}>
+        <Toaster />
+        <Router />
+      </QueryClientProvider>
+    </ReactLenis>
   );
 }
 

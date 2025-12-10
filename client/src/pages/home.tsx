@@ -43,6 +43,8 @@ import martialArtsImage from "@assets/generated_images/people_training_martial_a
 
 import { MapPin } from "lucide-react";
 
+import { useLenis } from "@/components/lenis";
+
 const fadeIn = {
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
@@ -58,6 +60,32 @@ const stagger = {
 };
 
 export default function Home() {
+  const lenis = useLenis();
+
+  const handleScrollTo = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    id: string
+  ) => {
+    e.preventDefault();
+    const element = document.getElementById(id);
+    if (element && lenis) {
+      lenis.scrollTo(element, {
+        offset: -80, // Adjust for header height
+        duration: 1.5,
+        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      });
+    }
+  };
+
+  const handleScrollTop = () => {
+    if (lenis) {
+      lenis.scrollTo(0, {
+        duration: 1.5,
+        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Navigation */}
@@ -66,18 +94,21 @@ export default function Home() {
           <nav className="hidden md:flex items-center gap-8 flex-1">
             <a
               href="#modalidades"
+              onClick={(e) => handleScrollTo(e, "modalidades")}
               className="text-sm font-medium hover:text-primary transition-colors"
             >
               MODALIDADES
             </a>
             <a
               href="#planos"
+              onClick={(e) => handleScrollTo(e, "planos")}
               className="text-sm font-medium hover:text-primary transition-colors"
             >
               PLANOS
             </a>
             <a
               href="#unidades"
+              onClick={(e) => handleScrollTo(e, "unidades")}
               className="text-sm font-medium hover:text-primary transition-colors"
             >
               UNIDADES
@@ -86,7 +117,7 @@ export default function Home() {
 
           <div
             className="flex items-center justify-center flex-1 cursor-pointer"
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            onClick={handleScrollTop}
           >
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <img
@@ -156,12 +187,12 @@ export default function Home() {
                 <span className="text-white drop-shadow-lg block mb-2">
                   SUA MELHOR
                 </span>
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-red-500 to-primary drop-shadow-[0_0_25px_rgba(220,20,60,0.8)] filter block mb-2">
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-red-500 to-primary drop-shadow-[0_0_25px_rgba(220,20,60,0.8)] filter block mb-2">
                   VERSÃO
                 </span>
                 <span className="text-white drop-shadow-lg block">
                   COMEÇA{" "}
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-red-500 to-primary drop-shadow-[0_0_25px_rgba(220,20,60,0.8)] filter">
+                  <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-red-500 to-primary drop-shadow-[0_0_25px_rgba(220,20,60,0.8)] filter">
                     AGORA
                   </span>
                 </span>
