@@ -61,17 +61,9 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Navigation */}
-      <header className="fixed top-0 w-full z-50 bg-background/90 backdrop-blur-lg border-b border-white/10">
-        <div className="container mx-auto px-4 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <img
-              src={logoImage}
-              alt="Saúde Fit Logo"
-              className="h-12 w-auto object-contain rounded-md"
-            />
-          </div>
-
-          <nav className="hidden md:flex items-center gap-8">
+      <header className="fixed top-0 w-full z-50 bg-background/90 backdrop-blur-lg border-b border-white/10 h-24">
+        <div className="container mx-auto px-4 h-full flex items-center justify-between">
+          <nav className="hidden md:flex items-center gap-8 flex-1">
             <a
               href="#modalidades"
               className="text-sm font-medium hover:text-primary transition-colors"
@@ -92,7 +84,20 @@ export default function Home() {
             </a>
           </nav>
 
-          <div className="flex items-center gap-4">
+          <div
+            className="flex items-center justify-center flex-1 cursor-pointer"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          >
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <img
+                src={logoImage}
+                alt="Saúde Fit Logo"
+                className="h-20 w-auto object-contain rounded-md drop-shadow-lg"
+              />
+            </motion.div>
+          </div>
+
+          <div className="flex items-center gap-4 flex-1 justify-end">
             <Link href="/dashboard">
               <Button
                 variant="ghost"
@@ -146,11 +151,20 @@ export default function Home() {
             >
               <motion.h1
                 variants={fadeIn}
-                className="text-5xl md:text-7xl font-heading font-bold leading-tight mb-6 pb-4"
+                className="text-6xl md:text-8xl font-black italic tracking-tight leading-tight mb-8"
               >
-                SUA MELHOR <br />
-                <span className="text-primary">VERSÃO</span> COMEÇA <br />
-                AGORA
+                <span className="text-white drop-shadow-lg block mb-2">
+                  SUA MELHOR
+                </span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-red-500 to-primary drop-shadow-[0_0_25px_rgba(220,20,60,0.8)] filter block mb-2">
+                  VERSÃO
+                </span>
+                <span className="text-white drop-shadow-lg block">
+                  COMEÇA{" "}
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-red-500 to-primary drop-shadow-[0_0_25px_rgba(220,20,60,0.8)] filter">
+                    AGORA
+                  </span>
+                </span>
               </motion.h1>
 
               <motion.p
@@ -204,7 +218,7 @@ export default function Home() {
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
               {[
                 {
                   title: "Máquinas de Alta Performance e Qualidade",
@@ -225,6 +239,20 @@ export default function Home() {
                   icon: UserCog,
                 },
                 {
+                  title: "Quadras de Beach Tennis e Futevôlei",
+                  subtitle: "Unidade Perimetral",
+                  description:
+                    "Oferecemos tudo o que você precisa para treinar e praticar esportes de forma eficaz e segura.",
+                  icon: Trophy,
+                },
+                {
+                  title: "Estacionamento Próprio",
+                  subtitle: "Unidade Perimetral",
+                  description:
+                    "Estacione com segurança: temos vagas exclusivas para alunos.",
+                  icon: Car,
+                },
+                {
                   title: "Aplicativo exclusivo de treino",
                   description:
                     "Acompanhe seu treino e todas sua evolução nosso aplicativo exclusivo.",
@@ -235,12 +263,6 @@ export default function Home() {
                   description:
                     "Nossas máquinas são periodicamente inspecionadas e passam por manutenção regular, garantindo um treino seguro e eficaz para você.",
                   icon: ShieldCheck,
-                },
-                {
-                  title: "Estrutura Completa",
-                  description:
-                    "Com equipamentos modernos e ambiente acolhedor, oferecemos tudo o que você precisa para treinar de forma eficaz e segura.",
-                  icon: Building2,
                 },
                 {
                   title: "Profissionais qualificados",
@@ -257,20 +279,6 @@ export default function Home() {
                   title: "Cadeiras de Massagem",
                   description: "Relaxe após o treino com máximo conforto.",
                   icon: Armchair,
-                },
-                {
-                  title: "Quadras de Beach Tennis e Futevôlei",
-                  subtitle: "Unidade Perimetral",
-                  description:
-                    "Oferecemos tudo o que você precisa para treinar e praticar esportes de forma eficaz e segura.",
-                  icon: Trophy,
-                },
-                {
-                  title: "Estacionamento Próprio",
-                  subtitle: "Unidade Perimetral",
-                  description:
-                    "Estacione com segurança: temos vagas exclusivas para alunos.",
-                  icon: Car,
                 },
               ].map((feature, index) => (
                 <motion.div
