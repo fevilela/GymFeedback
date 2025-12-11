@@ -95,7 +95,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Navigation */}
-      <header className="fixed top-0 w-full z-50 bg-background/90 backdrop-blur-lg border-b border-white/10 h-32">
+      <header className="fixed top-0 w-full z-50 bg-background/90 backdrop-blur-lg border-b border-white/10 h-20">
         <div className="container mx-auto px-4 h-full flex items-center justify-between">
           {/* Mobile Menu Trigger */}
           <div className="md:hidden flex items-center z-50">
@@ -203,7 +203,7 @@ export default function Home() {
               <img
                 src={logoImage}
                 alt="Saúde Fit Logo"
-                className="h-28 w-auto object-contain rounded-xl drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
+                className="h-10 w-auto object-contain rounded-xl drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
               />
             </motion.div>
           </div>
@@ -798,7 +798,7 @@ export default function Home() {
           <p>&copy; 2025 Saúde Fit Academia. Todos os direitos reservados.</p>
 
           <div className="flex items-center justify-center gap-2 mt-4 text-xs text-muted-foreground/60">
-            <span>Desenvolvido por Aura Tech</span>
+            <span>Desenvolvido por</span>
             <a
               href="https://www.instagram.com/auratechn/"
               target="_blank"
