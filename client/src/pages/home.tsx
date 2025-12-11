@@ -39,6 +39,7 @@ import {
 import heroImage from "@assets/gym-hero.jpg";
 import runnerImage from "@assets/generated_images/athletic_person_running_with_motion_blur.png";
 import logoImage from "@assets/logo.png";
+import auraTechLogo from "@assets/aura.png";
 
 import unit1Image from "@assets/generated_images/modern_gym_exterior_on_a_city_street_day_time.png";
 import unit2Image from "@assets/generated_images/unidade2.png";
@@ -48,9 +49,7 @@ import danceClassImage from "@assets/generated_images/group_dance_class_in_a_gym
 import weightTrainingImage from "@assets/generated_images/modern_weight_training_area_with_equipment.png";
 import martialArtsImage from "@assets/generated_images/people_training_martial_arts_in_a_gym.png";
 
-import { MapPin } from "lucide-react";
-
-import { useLenis } from "@/components/lenis";
+import { MapPin, Instagram } from "lucide-react";
 
 const fadeIn = {
   initial: { opacity: 0, y: 20 },
@@ -67,30 +66,30 @@ const stagger = {
 };
 
 export default function Home() {
-  const lenis = useLenis();
-
   const handleScrollTo = (
     e: React.MouseEvent<HTMLAnchorElement>,
     id: string
   ) => {
     e.preventDefault();
     const element = document.getElementById(id);
-    if (element && lenis) {
-      lenis.scrollTo(element, {
-        offset: -80, // Adjust for header height
-        duration: 1.5,
-        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    if (element) {
+      const headerOffset = 80;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition =
+        elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
       });
     }
   };
 
   const handleScrollTop = () => {
-    if (lenis) {
-      lenis.scrollTo(0, {
-        duration: 1.5,
-        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      });
-    }
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
   return (
@@ -783,7 +782,36 @@ export default function Home() {
               className="h-8 w-auto object-contain opacity-80"
             />
           </div>
+
+          <div className="flex justify-center mb-8">
+            <a
+              href="https://www.instagram.com/saudefitlavras/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-3 bg-white/5 rounded-full hover:bg-primary hover:text-white transition-all duration-300 group"
+              aria-label="Siga-nos no Instagram"
+            >
+              <Instagram className="w-6 h-6" />
+            </a>
+          </div>
+
           <p>&copy; 2025 Saúde Fit Academia. Todos os direitos reservados.</p>
+
+          <div className="flex items-center justify-center gap-2 mt-4 text-xs text-muted-foreground/60">
+            <span>Desenvolvido por Aura Tech</span>
+            <a
+              href="https://www.instagram.com/auratechn/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block"
+            >
+              <img
+                src={auraTechLogo}
+                alt="Aura Tech"
+                className="h-12 w-auto opacity-70 hover:opacity-100 transition-opacity"
+              />
+            </a>
+          </div>
         </div>
       </footer>
     </div>
