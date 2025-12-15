@@ -39,7 +39,7 @@ import {
 import heroImage from "@assets/gym-hero.jpg";
 import runnerImage from "@assets/generated_images/athletic_person_running_with_motion_blur.png";
 import logoImage from "@assets/logo.png";
-import auraTechLogo from "@assets/aura.png";
+import auraTechLogo from "@assets/logo.png";
 
 import unit1Image from "@assets/generated_images/modern_gym_exterior_on_a_city_street_day_time.png";
 import unit2Image from "@assets/generated_images/unidade2.png";
@@ -202,8 +202,8 @@ export default function Home() {
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <img
                 src={logoImage}
-                alt="Saúde Fit Logo"
-                className="h-10 w-auto object-contain rounded-xl drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
+                alt="Iron Paradise Logo"
+                className="h-20 w-auto object-contain rounded-xl drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
               />
             </motion.div>
           </div>
@@ -267,12 +267,17 @@ export default function Home() {
                 <span className="text-white drop-shadow-lg block mb-2">
                   SUA MELHOR
                 </span>
-                <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-red-500 to-primary drop-shadow-[0_0_25px_rgba(220,20,60,0.8)] filter block mb-2">
+                <span
+                  className="text-transparent bg-clip-text bg-linear-to-r 
+from-primary via-blue-300 to-primary 
+drop-shadow-[0_0_12px_rgba(30,64,175,0.5)] 
+filter block mb-2"
+                >
                   VERSÃO
                 </span>
                 <span className="text-white drop-shadow-lg block">
                   COMEÇA{" "}
-                  <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-red-500 to-primary drop-shadow-[0_0_25px_rgba(220,20,60,0.8)] filter">
+                  <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-blue-300 to-primary drop-shadow-[0_0_12px_rgba(30,64,175,0.5)] filter block mb-2">
                     AGORA
                   </span>
                 </span>
@@ -325,11 +330,11 @@ export default function Home() {
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">
                 POR QUE ESCOLHER A{" "}
-                <span className="text-primary">SAÚDE FIT</span>?
+                <span className="text-primary">Iron Paradise</span>?
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {[
                 {
                   title: "Máquinas de Alta Performance e Qualidade",
@@ -350,15 +355,7 @@ export default function Home() {
                   icon: UserCog,
                 },
                 {
-                  title: "Quadras de Beach Tennis e Futevôlei",
-                  subtitle: "Unidade Perimetral",
-                  description:
-                    "Oferecemos tudo o que você precisa para treinar e praticar esportes de forma eficaz e segura.",
-                  icon: Trophy,
-                },
-                {
                   title: "Estacionamento Próprio",
-                  subtitle: "Unidade Perimetral",
                   description:
                     "Estacione com segurança: temos vagas exclusivas para alunos.",
                   icon: Car,
@@ -386,11 +383,6 @@ export default function Home() {
                   description: "Conforto e praticidade para sua rotina.",
                   icon: ShowerHead,
                 },
-                {
-                  title: "Cadeiras de Massagem",
-                  description: "Relaxe após o treino com máximo conforto.",
-                  icon: Armchair,
-                },
               ].map((feature, index) => (
                 <motion.div
                   key={index}
@@ -412,11 +404,7 @@ export default function Home() {
                       <h3 className="text-lg font-heading font-bold text-white mb-1 group-hover:text-primary transition-colors duration-300 leading-tight">
                         {feature.title}
                       </h3>
-                      {feature.subtitle && (
-                        <span className="text-[10px] font-bold text-primary uppercase tracking-wider mb-1 block bg-primary/10 w-fit px-2 py-0.5 rounded">
-                          {feature.subtitle}
-                        </span>
-                      )}
+
                       <p className="text-xs text-muted-foreground leading-relaxed group-hover:text-gray-300 transition-colors duration-300 mt-2">
                         {feature.description}
                       </p>
@@ -687,7 +675,7 @@ export default function Home() {
                 NOSSAS <span className="text-primary">UNIDADES</span>
               </h2>
               <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-                Encontre a Saúde Fit mais próxima de você e comece sua
+                Encontre a Iron Paradise mais próxima de você e comece sua
                 transformação hoje mesmo.
               </p>
             </div>
@@ -709,11 +697,11 @@ export default function Home() {
                   <div className="flex items-start gap-3 text-muted-foreground mb-4">
                     <MapPin className="w-5 h-5 text-primary shrink-0 mt-1" />
                     <p>
-                      R. Barão do Rio Branco, 37
+                      R. João Pinheiro, 37
                       <br />
-                      Vila São Francisco, Lavras - MG
+                      Vila São Francisco, Santos - SP
                       <br />
-                      CEP: 37200-000
+                      CEP: 11015-060
                     </p>
                   </div>
                   <Button
@@ -747,11 +735,11 @@ export default function Home() {
                   <div className="flex items-start gap-3 text-muted-foreground mb-4">
                     <MapPin className="w-5 h-5 text-primary shrink-0 mt-1" />
                     <p>
-                      Av. Dr. Silvio Menicucci, 2126
+                      Av. Jucelino Kubitschek, 2126
                       <br />
-                      Belo Horizonte, Lavras - MG
+                      Belo Horizonte, Santos - SP
                       <br />
-                      CEP: 37200-000
+                      CEP: 11015-001
                     </p>
                   </div>
                   <Button
@@ -778,7 +766,7 @@ export default function Home() {
           <div className="flex items-center justify-center gap-2 mb-6">
             <img
               src={logoImage}
-              alt="Saúde Fit Logo"
+              alt="Iron Paradise Logo"
               className="h-8 w-auto object-contain opacity-80"
             />
           </div>
@@ -795,7 +783,9 @@ export default function Home() {
             </a>
           </div>
 
-          <p>&copy; 2025 Saúde Fit Academia. Todos os direitos reservados.</p>
+          <p>
+            &copy; 2025 Iron Paradise Academia. Todos os direitos reservados.
+          </p>
 
           <div className="flex items-center justify-center gap-2 mt-4 text-xs text-muted-foreground/60">
             <span>Desenvolvido por</span>

@@ -385,7 +385,7 @@ export default function Collaborators() {
                     </TableCell>
                     <TableCell>{collab.role}</TableCell>
                     <TableCell>
-                      <span className="px-2 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold">
+                      <span className="px-2 py-1 rounded-full bg-primary/10 text-white text-xs font-bold">
                         {collab.unit}
                       </span>
                     </TableCell>

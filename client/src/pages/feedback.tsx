@@ -152,7 +152,7 @@ export default function Feedback() {
         <div className="inline-flex items-center gap-3 bg-white/5 px-6 py-3 rounded-full backdrop-blur-md border border-white/10">
           <img
             src={logoImage}
-            alt="Saúde Fit"
+            alt="Iron Paradise"
             className="h-8 w-auto object-contain"
           />
           <span className="font-heading text-xl font-bold tracking-wider ml-2 border-l border-white/20 pl-3">
@@ -441,7 +441,7 @@ export default function Feedback() {
               </h2>
               <p className="text-xl text-muted-foreground mb-8 max-w-md mx-auto">
                 Seu feedback foi registrado com sucesso. Agradecemos por ajudar
-                a fazer da Saúde Fit um lugar melhor.
+                a fazer da Iron Paradise um lugar melhor.
               </p>
               <Button
                 variant="outline"
