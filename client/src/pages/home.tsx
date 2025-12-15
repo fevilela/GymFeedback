@@ -39,7 +39,7 @@ import {
 import heroImage from "@assets/gym-hero.jpg";
 import runnerImage from "@assets/generated_images/athletic_person_running_with_motion_blur.png";
 import logoImage from "@assets/logo.png";
-import auraTechLogo from "@assets/logo.png";
+import auraTechLogo from "@assets/aura.png";
 
 import unit1Image from "@assets/generated_images/modern_gym_exterior_on_a_city_street_day_time.png";
 import unit2Image from "@assets/generated_images/unidade2.png";
@@ -148,7 +148,7 @@ export default function Home() {
                     <Link href="/feedback">
                       <Button
                         variant="outline"
-                        className="border-primary text-primary hover:bg-primary hover:text-primary-foreground w-full font-bold"
+                        className="border-primary text-white hover:bg-primary hover:text-primary-foreground w-full font-bold"
                       >
                         <Star className="w-4 h-4 mr-2" />
                         AVALIAR
@@ -157,7 +157,7 @@ export default function Home() {
                     <Button
                       onClick={() =>
                         window.open(
-                          "https://api.whatsapp.com/send/?phone=5535999384418&text=Ol%C3%A1%2C%20vim%20pelo%20site%20da%20academia%20e%20gostaria%20de%20fazer%20a%20minha%20matricula!",
+                          "https://api.whatsapp.com/send/?phone=5535999999999&text=Ol%C3%A1%2C%20vim%20pelo%20site%20da%20academia%20e%20gostaria%20de%20fazer%20a%20minha%20matricula!",
                           "_blank"
                         )
                       }
@@ -220,7 +220,7 @@ export default function Home() {
             <Link href="/feedback">
               <Button
                 variant="outline"
-                className="border-primary text-primary hover:bg-primary hover:text-primary-foreground hidden sm:flex font-bold"
+                className="border-primary text-white hover:bg-primary hover:text-primary-foreground hidden sm:flex font-bold"
               >
                 <Star className="w-4 h-4 mr-2" />
                 AVALIAR
@@ -229,7 +229,7 @@ export default function Home() {
             <Button
               onClick={() =>
                 window.open(
-                  "https://api.whatsapp.com/send/?phone=5535999384418&text=Ol%C3%A1%2C%20vim%20pelo%20site%20da%20academia%20e%20gostaria%20de%20fazer%20a%20minha%20matricula!",
+                  "https://api.whatsapp.com/send/?phone=5535999999999&text=Ol%C3%A1%2C%20vim%20pelo%20site%20da%20academia%20e%20gostaria%20de%20fazer%20a%20minha%20matricula!",
                   "_blank"
                 )
               }
@@ -277,7 +277,7 @@ filter block mb-2"
                 </span>
                 <span className="text-white drop-shadow-lg block">
                   COMEÇA{" "}
-                  <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-blue-300 to-primary drop-shadow-[0_0_12px_rgba(30,64,175,0.5)] filter block mb-2">
+                  <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-blue-300 to-primary drop-shadow-[0_0_12px_rgba(30,64,175,0.5)] filter mb-2">
                     AGORA
                   </span>
                 </span>
@@ -298,7 +298,7 @@ filter block mb-2"
                 <Button
                   onClick={() =>
                     window.open(
-                      "https://api.whatsapp.com/send/?phone=5535999384418&text=Ol%C3%A1%2C%20vim%20pelo%20site%20da%20academia%20e%20gostaria%20de%20fazer%20a%20minha%20matricula!",
+                      "https://api.whatsapp.com/send/?phone=5535999999999&text=Ol%C3%A1%2C%20vim%20pelo%20site%20da%20academia%20e%20gostaria%20de%20fazer%20a%20minha%20matricula!",
                       "_blank"
                     )
                   }
@@ -465,8 +465,6 @@ filter block mb-2"
                   {[
                     "Musculação",
                     "Ritmos",
-                    "Quadras de areia",
-                    "Spinning",
                     "Boxe",
                     "Muay Thai",
                     "Dança",
@@ -475,7 +473,6 @@ filter block mb-2"
                     "Funcional",
                     "Step",
                     "Pilates Solo",
-                    "Jiu Jitsu (Adulto e Kids)",
                   ].map((item, i) => (
                     <div key={i} className="flex items-center gap-3">
                       <div className="w-2 h-2 bg-primary rounded-full" />
@@ -526,7 +523,7 @@ filter block mb-2"
               <Card className="bg-card border-white/10 relative overflow-hidden hover:border-primary/50 transition-all">
                 <CardContent className="p-8 flex flex-col h-full">
                   <h3 className="text-2xl font-heading font-bold mb-2">
-                    AVULSO
+                    Plano 1
                   </h3>
                   <div className="mb-6">
                     <span className="text-4xl font-bold text-white">
@@ -552,7 +549,7 @@ filter block mb-2"
                     className="w-full bg-white/10 hover:bg-white/20 text-white font-bold"
                     onClick={() =>
                       window.open(
-                        "https://api.whatsapp.com/send/?phone=5535999384418&text=Ol%C3%A1%2C%20gostaria%20de%20me%20matricular%20no%20plano%20Avulso!",
+                        "https://api.whatsapp.com/send/?phone=5535999999999&text=Ol%C3%A1%2C%20gostaria%20de%20me%20matricular%20no%20plano%20Avulso!",
                         "_blank"
                       )
                     }
@@ -570,7 +567,7 @@ filter block mb-2"
                 </div>
                 <CardContent className="p-8 flex flex-col h-full">
                   <h3 className="text-2xl font-heading font-bold mb-2">
-                    RECORRENTE
+                    Plano 2
                   </h3>
                   <div className="mb-6">
                     <span className="text-4xl font-bold text-white">
@@ -602,7 +599,7 @@ filter block mb-2"
                     className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold h-12 text-lg"
                     onClick={() =>
                       window.open(
-                        "https://api.whatsapp.com/send/?phone=5535999384418&text=Ol%C3%A1%2C%20gostaria%20de%20me%20matricular%20no%20plano%20Recorrente!",
+                        "https://api.whatsapp.com/send/?phone=5535999999999&text=Ol%C3%A1%2C%20gostaria%20de%20me%20matricular%20no%20plano%20Recorrente!",
                         "_blank"
                       )
                     }
@@ -616,7 +613,7 @@ filter block mb-2"
               <Card className="bg-card border-white/10 relative overflow-hidden hover:border-primary/50 transition-all">
                 <CardContent className="p-8 flex flex-col h-full">
                   <h3 className="text-2xl font-heading font-bold mb-2">
-                    ANUAL
+                    Plano 3
                   </h3>
                   <div className="mb-1">
                     <span className="text-4xl font-bold text-white">
@@ -651,7 +648,7 @@ filter block mb-2"
                     className="w-full bg-white/10 hover:bg-white/20 text-white font-bold"
                     onClick={() =>
                       window.open(
-                        "https://api.whatsapp.com/send/?phone=5535999384418&text=Ol%C3%A1%2C%20gostaria%20de%20me%20matricular%20no%20plano%20Anual!",
+                        "https://api.whatsapp.com/send/?phone=5535999999999&text=Ol%C3%A1%2C%20gostaria%20de%20me%20matricular%20no%20plano%20Anual!",
                         "_blank"
                       )
                     }
@@ -763,17 +760,9 @@ filter block mb-2"
 
       <footer className="bg-black py-12 border-t border-white/10">
         <div className="container mx-auto px-4 text-center text-muted-foreground">
-          <div className="flex items-center justify-center gap-2 mb-6">
-            <img
-              src={logoImage}
-              alt="Iron Paradise Logo"
-              className="h-8 w-auto object-contain opacity-80"
-            />
-          </div>
-
-          <div className="flex justify-center mb-8">
+          <div className="flex justify-center gap-4 mb-8">
             <a
-              href="https://www.instagram.com/saudefitlavras/"
+              href="https://www.instagram.com/ironparadise_fake/"
               target="_blank"
               rel="noopener noreferrer"
               className="p-3 bg-white/5 rounded-full hover:bg-primary hover:text-white transition-all duration-300 group"
@@ -788,7 +777,7 @@ filter block mb-2"
           </p>
 
           <div className="flex items-center justify-center gap-2 mt-4 text-xs text-muted-foreground/60">
-            <span>Desenvolvido por</span>
+            <span>Desenvolvido por Aura Tech</span>
             <a
               href="https://www.instagram.com/auratechn/"
               target="_blank"
