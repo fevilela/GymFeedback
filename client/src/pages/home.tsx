@@ -226,6 +226,14 @@ export default function Home() {
                 AVALIAR
               </Button>
             </Link>
+            <Link href="/proposal">
+              <Button
+                variant="outline"
+                className="border-white/20 text-white hover:bg-white/10 hidden sm:flex font-bold"
+              >
+                VER PROPOSTA
+              </Button>
+            </Link>
             <Button
               onClick={() =>
                 window.open(

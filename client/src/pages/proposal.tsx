@@ -1,5 +1,4 @@
-import html2pdf from "html2pdf.js";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
 import {
@@ -36,28 +35,81 @@ export default function Proposal() {
   const contentRef = useRef<HTMLDivElement>(null);
 
   const handleDownloadPDF = () => {
-    const element = contentRef.current;
-    if (!element) return;
-
-    const opt = {
-      margin: 0,
-      filename: "proposta-iron-paradise.pdf",
-      image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true, logging: true },
-      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
-    };
-
-    // @ts-ignore - html2pdf types are a bit strict/outdated
-    html2pdf().set(opt).from(element).save();
+    // Using window.print() is more reliable for modern CSS (Tailwind v4)
+    // than html2canvas/html2pdf which fail with new color formats like oklch
+    window.print();
   };
+
+  useEffect(() => {
+    // Add print styles dynamically
+    const style = document.createElement("style");
+    style.innerHTML = `
+      @media print {
+        @page { 
+          margin: 0;
+          size: auto;
+        }
+        body { 
+          -webkit-print-color-adjust: exact !important; 
+          print-color-adjust: exact !important;
+          background-color: #000000 !important;
+          color: white !important;
+        }
+        /* Hide UI elements */
+        header, .print\\:hidden, button[class*="fixed"] { 
+          display: none !important; 
+        }
+        /* Ensure dark background persists */
+        .min-h-screen {
+          background-color: #000000 !important;
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+        /* Force text colors */
+        .text-muted-foreground {
+          color: #a1a1aa !important;
+        }
+        /* Fix Layouts for PDF */
+        .container {
+          max-width: none !important;
+          padding: 20px !important;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
 
   return (
     <div
       ref={contentRef}
-      className="min-h-screen bg-black text-white selection:bg-primary selection:text-white font-sans"
+      className="min-h-screen font-sans"
+      style={{ backgroundColor: "#000000", color: "#ffffff" }}
     >
+      <style>{`
+        .bg-primary { background-color: #2563eb !important; }
+        .text-primary { color: #2563eb !important; }
+        .border-primary { border-color: #2563eb !important; }
+        .text-muted-foreground { color: #a1a1aa !important; }
+        .bg-green-500 { background-color: #22c55e !important; }
+        .bg-black { background-color: #000000 !important; }
+        .text-white { color: #ffffff !important; }
+        .bg-zinc-900 { background-color: #18181b !important; }
+        .bg-card { background-color: #18181b !important; }
+        .border-white\\/10 { border-color: rgba(255, 255, 255, 0.1) !important; }
+        .bg-primary\\/5 { background-color: rgba(37, 99, 235, 0.05) !important; }
+        .bg-primary\\/10 { background-color: rgba(37, 99, 235, 0.1) !important; }
+      `}</style>
       {/* Header */}
-      <header className="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/10 h-20 print:hidden">
+      <header
+        className="fixed top-0 w-full z-50 backdrop-blur-md border-b h-20 print:hidden"
+        style={{
+          backgroundColor: "rgba(0,0,0,0.8)",
+          borderColor: "rgba(255,255,255,0.1)",
+        }}
+      >
         <div className="container mx-auto px-4 h-full flex items-center justify-between">
           <div className="flex items-center gap-2">
             <img
@@ -65,7 +117,10 @@ export default function Proposal() {
               alt="Logo"
               className="h-10 w-auto object-contain"
             />
-            <div className="h-6 w-px bg-white/20 mx-2" />
+            <div
+              className="h-6 w-px mx-2"
+              style={{ backgroundColor: "rgba(255,255,255,0.2)" }}
+            />
             <span className="font-heading font-bold text-lg tracking-wider hidden sm:block">
               PROPOSTA COMERCIAL
             </span>
@@ -74,7 +129,8 @@ export default function Proposal() {
             <Button
               onClick={handleDownloadPDF}
               variant="outline"
-              className="text-white border-white/20 hover:bg-white/10"
+              className="text-white hover:bg-white/10"
+              style={{ borderColor: "rgba(255,255,255,0.2)" }}
             >
               <Download className="mr-2 h-4 w-4" />
               Baixar PDF
@@ -82,7 +138,8 @@ export default function Proposal() {
             <Link href="/">
               <Button
                 variant="ghost"
-                className="text-white/70 hover:text-white"
+                className="hover:text-white"
+                style={{ color: "rgba(255,255,255,0.7)" }}
               >
                 Ver Site Ao Vivo <ArrowRight className="ml-2 w-4 h-4" />
               </Button>
@@ -95,8 +152,17 @@ export default function Proposal() {
         {/* Hero Proposal */}
         <section className="relative py-20 overflow-hidden">
           <div className="absolute inset-0 z-0">
-            <div className="absolute inset-0 bg-linear-to-br from-blue-900/20 via-black to-black" />
-            <div className="absolute top-0 right-0 p-96 bg-primary/5 rounded-full blur-[128px] -mr-32 -mt-32" />
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(to bottom right, rgba(30, 58, 138, 0.2), black, black)",
+              }}
+            />
+            <div
+              className="absolute top-0 right-0 p-96 rounded-full blur-[128px] -mr-32 -mt-32"
+              style={{ backgroundColor: "rgba(37, 99, 235, 0.05)" }}
+            />
           </div>
 
           <div className="container mx-auto px-4 relative z-10">
@@ -106,12 +172,25 @@ export default function Proposal() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
               >
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium mb-6">
+                <div
+                  className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-primary text-sm font-medium mb-6"
+                  style={{
+                    backgroundColor: "rgba(37, 99, 235, 0.1)",
+                    borderColor: "rgba(37, 99, 235, 0.2)",
+                    borderWidth: "1px",
+                  }}
+                >
                   <Zap className="w-4 h-4" /> Proposta de Desenvolvimento Web
                 </div>
                 <h1 className="text-5xl md:text-7xl font-heading font-black mb-6 leading-tight">
                   TRANSFORMANDO A <br />
-                  <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-blue-300 to-primary">
+                  <span
+                    className="text-transparent bg-clip-text"
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(to right, #1e40af, #93c5fd, #1e40af)",
+                    }}
+                  >
                     IRON PARADISE
                   </span>
                 </h1>
@@ -126,7 +205,13 @@ export default function Proposal() {
         </section>
 
         {/* Live Preview Section */}
-        <section className="py-20 bg-zinc-900/30 border-y border-white/5">
+        <section
+          className="py-20 border-y"
+          style={{
+            backgroundColor: "rgba(24, 24, 27, 0.3)",
+            borderColor: "rgba(255,255,255,0.05)",
+          }}
+        >
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-heading font-bold mb-4">
@@ -146,11 +231,17 @@ export default function Proposal() {
                     <Monitor className="text-primary w-5 h-5" /> Home Page &
                     Impacto Visual
                   </h3>
-                  <span className="text-xs text-muted-foreground bg-white/5 px-2 py-1 rounded">
+                  <span
+                    className="text-xs text-muted-foreground px-2 py-1 rounded"
+                    style={{ backgroundColor: "rgba(255,255,255,0.05)" }}
+                  >
                     Desktop View
                   </span>
                 </div>
-                <div className="rounded-xl overflow-hidden border border-white/10 shadow-2xl relative group h-[400px]">
+                <div
+                  className="rounded-xl overflow-hidden border shadow-2xl relative group h-[400px]"
+                  style={{ borderColor: "rgba(255,255,255,0.1)" }}
+                >
                   {/* We use a scaled div to simulate the screenshot */}
                   <div className="w-[200%] h-[200%] origin-top-left transform scale-50 bg-black pointer-events-none select-none">
                     <img
@@ -169,7 +260,13 @@ export default function Proposal() {
                       </Button>
                     </div>
                   </div>
-                  <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent flex items-end justify-center pb-8 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div
+                    className="absolute inset-0 flex items-end justify-center pb-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                    style={{
+                      background:
+                        "linear-gradient(to top, rgba(0,0,0,0.8), transparent, transparent)",
+                    }}
+                  >
                     <p className="text-white font-medium">
                       Design focado em conversão e impacto visual imediato
                     </p>
@@ -185,7 +282,10 @@ export default function Proposal() {
                       <Smartphone className="text-primary w-5 h-5" />{" "}
                       Responsividade Mobile
                     </h3>
-                    <span className="text-xs text-muted-foreground bg-white/5 px-2 py-1 rounded">
+                    <span
+                      className="text-xs text-muted-foreground px-2 py-1 rounded"
+                      style={{ backgroundColor: "rgba(255,255,255,0.05)" }}
+                    >
                       Mobile View
                     </span>
                   </div>
@@ -203,13 +303,25 @@ export default function Proposal() {
                           MATRICULE-SE
                         </Button>
                         <div className="grid grid-cols-2 gap-2 mt-auto">
-                          <div className="bg-zinc-900/80 p-3 rounded-lg border border-white/10">
+                          <div
+                            className="p-3 rounded-lg border"
+                            style={{
+                              backgroundColor: "rgba(24, 24, 27, 0.8)",
+                              borderColor: "rgba(255,255,255,0.1)",
+                            }}
+                          >
                             <Monitor className="w-4 h-4 text-primary mb-2" />
                             <div className="text-[10px] text-muted-foreground">
                               Musculação
                             </div>
                           </div>
-                          <div className="bg-zinc-900/80 p-3 rounded-lg border border-white/10">
+                          <div
+                            className="p-3 rounded-lg border"
+                            style={{
+                              backgroundColor: "rgba(24, 24, 27, 0.8)",
+                              borderColor: "rgba(255,255,255,0.1)",
+                            }}
+                          >
                             <Zap className="w-4 h-4 text-primary mb-2" />
                             <div className="text-[10px] text-muted-foreground">
                               Cross
@@ -222,7 +334,10 @@ export default function Proposal() {
                 </div>
 
                 <div className="flex flex-col justify-center space-y-8">
-                  <div className="bg-card border border-white/10 p-6 rounded-xl">
+                  <div
+                    className="bg-card border p-6 rounded-xl"
+                    style={{ borderColor: "rgba(255,255,255,0.1)" }}
+                  >
                     <h4 className="font-bold text-lg mb-2 text-white flex items-center gap-2">
                       <Layout className="w-5 h-5 text-primary" /> Arquitetura
                       SPA
@@ -233,7 +348,10 @@ export default function Proposal() {
                       contato sem atrito, proporcionando uma experiência de app.
                     </p>
                   </div>
-                  <div className="bg-card border border-white/10 p-6 rounded-xl">
+                  <div
+                    className="bg-card border p-6 rounded-xl"
+                    style={{ borderColor: "rgba(255,255,255,0.1)" }}
+                  >
                     <h4 className="font-bold text-lg mb-2 text-white flex items-center gap-2">
                       <Globe className="w-5 h-5 text-primary" /> SEO Otimizado
                     </h4>
@@ -243,7 +361,10 @@ export default function Proposal() {
                       encontrada organicamente na região.
                     </p>
                   </div>
-                  <div className="bg-card border border-white/10 p-6 rounded-xl">
+                  <div
+                    className="bg-card border p-6 rounded-xl"
+                    style={{ borderColor: "rgba(255,255,255,0.1)" }}
+                  >
                     <h4 className="font-bold text-lg mb-2 text-white flex items-center gap-2">
                       <Palette className="w-5 h-5 text-primary" /> Design System
                       Exclusivo
@@ -274,7 +395,13 @@ export default function Proposal() {
             </div>
 
             <div className="grid md:grid-cols-2 gap-8">
-              <Card className="bg-zinc-900/20 border-white/10">
+              <Card
+                className="border"
+                style={{
+                  backgroundColor: "rgba(24, 24, 27, 0.2)",
+                  borderColor: "rgba(255,255,255,0.1)",
+                }}
+              >
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Code className="text-primary w-5 h-5" /> Front-end &
@@ -307,7 +434,13 @@ export default function Proposal() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-zinc-900/20 border-white/10">
+              <Card
+                className="border"
+                style={{
+                  backgroundColor: "rgba(24, 24, 27, 0.2)",
+                  borderColor: "rgba(255,255,255,0.1)",
+                }}
+              >
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Settings className="text-primary w-5 h-5" />{" "}
@@ -340,7 +473,13 @@ export default function Proposal() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-zinc-900/20 border-white/10">
+              <Card
+                className="border"
+                style={{
+                  backgroundColor: "rgba(24, 24, 27, 0.2)",
+                  borderColor: "rgba(255,255,255,0.1)",
+                }}
+              >
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Shield className="text-primary w-5 h-5" /> Segurança &
@@ -369,7 +508,13 @@ export default function Proposal() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-zinc-900/20 border-white/10">
+              <Card
+                className="border"
+                style={{
+                  backgroundColor: "rgba(24, 24, 27, 0.2)",
+                  borderColor: "rgba(255,255,255,0.1)",
+                }}
+              >
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Search className="text-primary w-5 h-5" /> SEO & Marketing
@@ -401,7 +546,13 @@ export default function Proposal() {
         </section>
 
         {/* Timeline */}
-        <section className="py-20 bg-zinc-900/30 border-y border-white/5">
+        <section
+          className="py-20 border-y"
+          style={{
+            backgroundColor: "rgba(24, 24, 27, 0.3)",
+            borderColor: "rgba(255,255,255,0.05)",
+          }}
+        >
           <div className="container mx-auto px-4 max-w-4xl">
             <div className="text-center mb-16">
               <h2 className="text-3xl font-heading font-bold mb-4">
@@ -412,7 +563,10 @@ export default function Proposal() {
               </p>
             </div>
 
-            <div className="relative border-l border-white/10 ml-6 md:ml-12 space-y-12">
+            <div
+              className="relative border-l ml-6 md:ml-12 space-y-12"
+              style={{ borderColor: "rgba(255,255,255,0.1)" }}
+            >
               <div className="relative pl-8 md:pl-12">
                 <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-primary border-4 border-black shadow-[0_0_10px_rgba(37,99,235,0.5)]" />
                 <h3 className="text-xl font-bold text-white mb-2">
@@ -472,7 +626,13 @@ export default function Proposal() {
 
             <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
               {/* Basic */}
-              <Card className="bg-zinc-900/50 border-white/10 hover:border-white/20 transition-all flex flex-col">
+              <Card
+                className="border transition-all flex flex-col"
+                style={{
+                  backgroundColor: "rgba(24, 24, 27, 0.5)",
+                  borderColor: "rgba(255,255,255,0.1)",
+                }}
+              >
                 <CardHeader>
                   <CardTitle className="text-white text-xl">
                     Landing Page
@@ -505,7 +665,8 @@ export default function Proposal() {
                   </ul>
                   <Button
                     variant="outline"
-                    className="w-full border-white/20 text-white hover:bg-white/10"
+                    className="w-full text-white hover:bg-white/10"
+                    style={{ borderColor: "rgba(255,255,255,0.2)" }}
                   >
                     Selecionar
                   </Button>
@@ -513,7 +674,10 @@ export default function Proposal() {
               </Card>
 
               {/* Pro - Featured */}
-              <Card className="bg-zinc-900/80 border-primary shadow-[0_0_30px_rgba(37,99,235,0.15)] relative transform md:-translate-y-4 flex flex-col">
+              <Card
+                className="border-primary shadow-[0_0_30px_rgba(37,99,235,0.15)] relative transform md:-translate-y-4 flex flex-col"
+                style={{ backgroundColor: "rgba(24, 24, 27, 0.8)" }}
+              >
                 <div className="absolute top-0 inset-x-0 h-1 bg-primary" />
                 <div className="absolute top-4 right-4 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded uppercase">
                   Recomendado
@@ -556,14 +720,23 @@ export default function Proposal() {
                       Meses de Suporte
                     </li>
                   </ul>
-                  <Button className="w-full bg-primary hover:bg-primary/90 text-white font-bold">
+                  <Button
+                    className="w-full text-white font-bold"
+                    style={{ backgroundColor: "#2563eb" }}
+                  >
                     Contratar Projeto
                   </Button>
                 </CardContent>
               </Card>
 
               {/* Enterprise */}
-              <Card className="bg-zinc-900/50 border-white/10 hover:border-white/20 transition-all flex flex-col">
+              <Card
+                className="transition-all flex flex-col border"
+                style={{
+                  backgroundColor: "rgba(24, 24, 27, 0.5)",
+                  borderColor: "rgba(255,255,255,0.1)",
+                }}
+              >
                 <CardHeader>
                   <CardTitle className="text-white text-xl">
                     E-commerce
@@ -596,7 +769,8 @@ export default function Proposal() {
                   </ul>
                   <Button
                     variant="outline"
-                    className="w-full border-white/20 text-white hover:bg-white/10"
+                    className="w-full text-white hover:bg-white/10"
+                    style={{ borderColor: "rgba(255,255,255,0.2)" }}
                   >
                     Falar com Consultor
                   </Button>
@@ -607,7 +781,13 @@ export default function Proposal() {
         </section>
 
         {/* FAQ */}
-        <section className="py-20 bg-zinc-900/30 border-t border-white/5">
+        <section
+          className="py-20 border-t"
+          style={{
+            backgroundColor: "rgba(24, 24, 27, 0.3)",
+            borderColor: "rgba(255,255,255,0.05)",
+          }}
+        >
           <div className="container mx-auto px-4 max-w-3xl">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-heading font-bold mb-4 flex items-center justify-center gap-2">
@@ -616,7 +796,11 @@ export default function Proposal() {
               </h2>
             </div>
             <Accordion type="single" collapsible className="w-full">
-              <AccordionItem value="item-1" className="border-white/10">
+              <AccordionItem
+                value="item-1"
+                className="border"
+                style={{ borderColor: "rgba(255,255,255,0.1)" }}
+              >
                 <AccordionTrigger className="text-lg">
                   O site funciona no celular?
                 </AccordionTrigger>
@@ -627,7 +811,11 @@ export default function Proposal() {
                   acessará por lá.
                 </AccordionContent>
               </AccordionItem>
-              <AccordionItem value="item-2" className="border-white/10">
+              <AccordionItem
+                value="item-2"
+                className="border"
+                style={{ borderColor: "rgba(255,255,255,0.1)" }}
+              >
                 <AccordionTrigger className="text-lg">
                   Preciso pagar mensalidade?
                 </AccordionTrigger>
@@ -638,7 +826,11 @@ export default function Proposal() {
                   diretamente aos provedores.
                 </AccordionContent>
               </AccordionItem>
-              <AccordionItem value="item-3" className="border-white/10">
+              <AccordionItem
+                value="item-3"
+                className="border"
+                style={{ borderColor: "rgba(255,255,255,0.1)" }}
+              >
                 <AccordionTrigger className="text-lg">
                   Consigo alterar os preços depois?
                 </AccordionTrigger>
@@ -648,7 +840,11 @@ export default function Proposal() {
                   maiores, oferecemos pacotes de manutenção ou suporte por hora.
                 </AccordionContent>
               </AccordionItem>
-              <AccordionItem value="item-4" className="border-white/10">
+              <AccordionItem
+                value="item-4"
+                className="border"
+                style={{ borderColor: "rgba(255,255,255,0.1)" }}
+              >
                 <AccordionTrigger className="text-lg">
                   O site aparece no Google?
                 </AccordionTrigger>
@@ -664,7 +860,14 @@ export default function Proposal() {
         </section>
 
         {/* Footer */}
-        <footer className="py-12 border-t border-white/5 text-center text-muted-foreground text-sm bg-black">
+        <footer
+          className="py-12 border-t text-center text-sm"
+          style={{
+            borderColor: "rgba(255,255,255,0.05)",
+            backgroundColor: "#000000",
+            color: "#a1a1aa",
+          }}
+        >
           <p>Proposta válida por 15 dias.</p>
           <p className="mt-2">Desenvolvido com tecnologia React e Vite.</p>
         </footer>
