@@ -8,7 +8,6 @@ import Feedback from "@/pages/feedback";
 import Dashboard from "@/pages/dashboard";
 import Login from "@/pages/login";
 import Collaborators from "@/pages/collaborators";
-import Proposal from "@/pages/proposal";
 import { useEffect } from "react";
 
 // Protected Route Component
@@ -37,7 +36,6 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
-      <Route path="/proposal" component={Proposal} />
       <Route path="/feedback" component={Feedback} />
       <Route path="/login" component={Login} />
       <Route path="/dashboard">
